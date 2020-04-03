@@ -33,6 +33,6 @@ module "ingress_controllers" {
 
 ## Outputs
 
-output "helm_nginx_ingress_status" {
-  value = helm_release.nginx_ingress.status
-}
+```
+helm_nginx_ingress_status
+```
