@@ -35,11 +35,17 @@ resource "kubernetes_namespace" "ingress_controllers" {
 # Helm #
 ########
 
+data "helm_repository" "stable" {
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com"
+}
+
 resource "helm_release" "nginx_ingress" {
-  name      = "nginx-ingress-acme"
-  chart     = "stable/nginx-ingress"
-  namespace = kubernetes_namespace.ingress_controllers.id
-  version   = "v1.24.0"
+  name       = "nginx-ingress-acme"
+  chart      = "nginx-ingress"
+  namespace  = kubernetes_namespace.ingress_controllers.id
+  repository = data.helm_repository.stable.metadata[0].name
+  version    = "1.35.0"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = kubernetes_namespace.ingress_controllers.id
