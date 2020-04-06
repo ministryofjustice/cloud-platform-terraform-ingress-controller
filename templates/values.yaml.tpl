@@ -69,11 +69,14 @@ controller:
 
   metrics:
     enabled: true
+    service:
+      omitClusterIP: true
     serviceMonitor:
       enabled: true
       namespace: ${metrics_namespace}
 
   service:
+    omitClusterIP: true
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "${external_dns_annotation}"
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
@@ -90,7 +93,7 @@ controller:
 
     service:
       annotations: {}
-      omitClusterIP: false
+      omitClusterIP: true
       clusterIP: ""
       externalIPs: []
       loadBalancerIP: ""
@@ -118,6 +121,9 @@ defaultBackend:
     pullPolicy: IfNotPresent
 
   extraArgs: {}
+
+  service:
+    omitClusterIP: true
 
   port: 8080
 
