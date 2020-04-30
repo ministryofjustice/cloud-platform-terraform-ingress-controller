@@ -116,6 +116,15 @@ controller:
       podAnnotations: {}
       nodeSelector: {}
 
+  extraVolumeMounts: 
+    - name: shared-memory
+      mountPath: /dev/shm
+
+  extraVolumes:
+    - name: shared-memory
+      emptyDir: 
+        medium: Memory
+
 defaultBackend:
   enabled: true
 
