@@ -13,7 +13,6 @@ module "ingress_controllers" {
 
   # This module requires helm and OPA already deployed
   dependence_prometheus  = helm_release.prometheus_operator
-  dependence_deploy      = null_resource.deploy
   dependence_opa         = module.opa.helm_opa_status
   dependence_certmanager = helm_release.cert-manager
 }
@@ -24,7 +23,6 @@ module "ingress_controllers" {
 | Name                            | Description                                                   | Type | Default | Required |
 |---------------------------------|---------------------------------------------------------------|:----:|:-------:|:--------:|
 | dependence_prometheus  | Prometheus Dependence variable                                         | string   |       | yes |
-| dependence_deploy      | Deploy (helm) dependence variable                                      | string   |       | yes |
 | dependence_opa         | Priority class dependence                                              | string   |       | yes |
 | dependence_certmanager | This module deploys lets-encrypt certs, so it depends on certmanager   | string   |       | yes |
 | cluster_domain_name    | Value used for externalDNS annotations and certmanager                 | string   |       | yes |
