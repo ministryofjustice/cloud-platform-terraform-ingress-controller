@@ -57,7 +57,6 @@ resource "helm_release" "nginx_ingress" {
   // self-signed certificate until the proper one becomes available. This
   // dependency is not captured here.
   depends_on = [
-    var.dependence_deploy,
     var.dependence_prometheus,
     var.dependence_opa,
   ]
