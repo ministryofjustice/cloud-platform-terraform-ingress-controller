@@ -59,6 +59,7 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [
     var.dependence_prometheus,
     var.dependence_opa,
+    var.dependence_certmanager
   ]
 
   lifecycle {
@@ -81,7 +82,7 @@ data "template_file" "nginx_ingress_default_certificate" {
 }
 
 resource "null_resource" "nginx_ingress_default_certificate" {
-  depends_on = [var.dependence_certmanager]
+  depends_on = [helm_release.nginx_ingress]
 
   provisioner "local-exec" {
     command = <<EOS
