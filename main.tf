@@ -35,17 +35,17 @@ resource "kubernetes_namespace" "ingress_controllers" {
 # Helm #
 ########
 
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
+data "helm_repository" "ingress-nginx" {
+  name = "ingress-nginx"
+  url  = "https://kubernetes.github.io/ingress-nginx"
 }
 
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-acme"
-  chart      = "nginx-ingress"
+  chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_controllers.id
-  repository = data.helm_repository.stable.metadata[0].name
-  version    = "1.35.0"
+  repository = data.helm_repository.ingress-nginx.metadata[0].name
+  version    = "2.13.0"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = kubernetes_namespace.ingress_controllers.id
@@ -59,6 +59,7 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [
     var.dependence_prometheus,
     var.dependence_opa,
+    var.dependence_certmanager
   ]
 
   lifecycle {
