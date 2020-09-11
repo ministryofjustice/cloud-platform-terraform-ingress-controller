@@ -59,6 +59,7 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [
     var.dependence_prometheus,
     var.dependence_opa,
+    var.dependence_certmanager
   ]
 
   lifecycle {
