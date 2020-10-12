@@ -1,4 +1,26 @@
 controller:
+  ## Tolerations for use with node taints
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations:
+    - key: "monitoring-node"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  ## Assign custom affinity rules to the prometheus instance
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: beta.kubernetes.io/instance-type
+            operator: In
+            values:
+            - r5.2xlarge
+
   replicaCount: 6
 
   electionID: ingress-controller-leader-acme
