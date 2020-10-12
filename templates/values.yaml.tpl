@@ -26,6 +26,8 @@ controller:
       maxUnavailable: 1
     type: RollingUpdate
 
+  minReadySeconds: 12
+
   replicaCount: 6
 
   electionID: ingress-controller-leader-acme
