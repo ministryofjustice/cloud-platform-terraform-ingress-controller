@@ -21,6 +21,11 @@ controller:
             values:
             - r5.2xlarge
 
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+
   replicaCount: 6
 
   electionID: ingress-controller-leader-acme
