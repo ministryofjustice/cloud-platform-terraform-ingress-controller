@@ -79,6 +79,8 @@ controller:
     serviceMonitor:
       enabled: true
       namespace: ${metrics_namespace}
+      additionalLabels:
+        release: prometheus-operator
 
   service:
     omitClusterIP: true
