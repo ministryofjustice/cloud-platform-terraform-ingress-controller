@@ -88,12 +88,13 @@ controller:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "${external_dns_annotation}"
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
 
     externalTrafficPolicy: "Local"
 
   extraArgs:
     default-ssl-certificate: ingress-controllers/default-certificate
-  
+
   admissionWebhooks:
     enabled: true
     failurePolicy: Fail
@@ -119,13 +120,13 @@ controller:
       podAnnotations: {}
       nodeSelector: {}
 
-  extraVolumeMounts: 
+  extraVolumeMounts:
     - name: shared-memory
       mountPath: /dev/shm
 
   extraVolumes:
     - name: shared-memory
-      emptyDir: 
+      emptyDir:
         medium: Memory
 
 defaultBackend:
