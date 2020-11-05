@@ -46,7 +46,7 @@ resource "helm_release" "nginx_ingress" {
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_controllers.id
   repository = data.helm_repository.ingress-nginx.metadata[0].name
-  version    = "2.13.0"
+  version    = "3.6.0"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = kubernetes_namespace.ingress_controllers.id

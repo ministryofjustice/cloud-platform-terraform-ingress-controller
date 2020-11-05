@@ -1,7 +1,23 @@
 controller:
   replicaCount: 6
+  
+    updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
 
+  minReadySeconds: 12
   electionID: ingress-controller-leader-acme
+
+  livenessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 20
+    timeoutSeconds: 5
+
+  readinessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 20
+    timeoutSeconds: 5
 
   config:
     enable-modsecurity: "false"
@@ -75,8 +91,6 @@ controller:
 
   metrics:
     enabled: true
-    service:
-      omitClusterIP: true
     serviceMonitor:
       enabled: true
       namespace: ${metrics_namespace}
@@ -84,11 +98,10 @@ controller:
         release: prometheus-operator
 
   service:
-    omitClusterIP: true
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "${external_dns_annotation}"
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     externalTrafficPolicy: "Local"
 
   extraArgs:
@@ -96,15 +109,21 @@ controller:
   
   admissionWebhooks:
     enabled: true
+    annotations: {}
+    enabled: true
     failurePolicy: Fail
+    # timeoutSeconds: 10
     port: 8443
+    certificate: "/usr/local/certificates/cert"
+    key: "/usr/local/certificates/key"
+    namespaceSelector: {}
+    objectSelector: {}
 
     service:
       annotations: {}
-      omitClusterIP: true
-      clusterIP: ""
+      # clusterIP: ""
       externalIPs: []
-      loadBalancerIP: ""
+      # loadBalancerIP: ""
       loadBalancerSourceRanges: []
       servicePort: 443
       type: ClusterIP
@@ -112,37 +131,23 @@ controller:
     patch:
       enabled: true
       image:
-        repository: jettech/kube-webhook-certgen
-        tag: v1.0.0
+        repository: docker.io/jettech/kube-webhook-certgen
+        tag: v1.5.0
         pullPolicy: IfNotPresent
+      ## Provide a priority class name to the webhook patching job
+      ##
       priorityClassName: ""
       podAnnotations: {}
       nodeSelector: {}
-
-  extraVolumeMounts: 
-    - name: shared-memory
-      mountPath: /dev/shm
-
-  extraVolumes:
-    - name: shared-memory
-      emptyDir: 
-        medium: Memory
+      tolerations: []
+      runAsUser: 2000
 
 defaultBackend:
   enabled: true
-
   name: default-backend
   image:
     repository: ministryofjustice/cloud-platform-custom-error-pages
     tag: "0.4"
-    pullPolicy: IfNotPresent
-
-  extraArgs: {}
-
-  service:
-    omitClusterIP: true
-
-  port: 8080
 
 rbac:
   create: true
