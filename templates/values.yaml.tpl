@@ -1,7 +1,7 @@
 controller:
   replicaCount: 6
   
-    updateStrategy:
+  updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
     type: RollingUpdate
