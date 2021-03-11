@@ -88,7 +88,7 @@ resource "null_resource" "nginx_ingress_default_certificate" {
   provisioner "local-exec" {
     command = <<EOS
 kubectl apply -n ingress-controllers -f - <<EOF
-${data.template_file.nginx_ingress_default_certificate.rendered}
+${self.triggers.contents_file}
 EOF
 EOS
 
@@ -99,7 +99,7 @@ EOS
 
     command = <<EOS
 kubectl delete -n ingress-controllers -f - <<EOF
-${data.template_file.nginx_ingress_default_certificate.rendered}
+${self.triggers.contents_file}
 EOF
 EOS
 
@@ -109,5 +109,6 @@ EOS
     contents = sha1(
       data.template_file.nginx_ingress_default_certificate.rendered,
     )
+    contents_file = data.template_file.nginx_ingress_default_certificate.rendered,
   }
 }
