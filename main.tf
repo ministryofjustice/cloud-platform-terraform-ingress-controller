@@ -95,19 +95,11 @@ EOS
   }
 
   provisioner "local-exec" {
-    when = destroy
-
-    command = <<EOS
-kubectl delete -n ingress-controllers -f - <<EOF
-${data.template_file.nginx_ingress_default_certificate.rendered}
-EOF
-EOS
-
+    when    = destroy
+    command = "kubectl -n ingress-controllers delete certificate default"
   }
 
   triggers = {
-    contents = sha1(
-      data.template_file.nginx_ingress_default_certificate.rendered,
-    )
+    contents = sha1(data.template_file.nginx_ingress_default_certificate.rendered)
   }
 }
