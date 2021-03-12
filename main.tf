@@ -88,7 +88,7 @@ resource "null_resource" "nginx_ingress_default_certificate" {
   provisioner "local-exec" {
     command = <<EOS
 kubectl apply -n ingress-controllers -f - <<EOF
-${self.triggers.contents_file}
+${data.template_file.nginx_ingress_default_certificate.rendered}
 EOF
 EOS
 
