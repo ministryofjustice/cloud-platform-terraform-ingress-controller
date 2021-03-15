@@ -36,16 +36,11 @@ resource "kubernetes_namespace" "ingress_controllers" {
 # Helm #
 ########
 
-data "helm_repository" "ingress-nginx" {
-  name = "ingress-nginx"
-  url  = "https://kubernetes.github.io/ingress-nginx"
-}
-
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-acme"
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_controllers.id
-  repository = data.helm_repository.ingress-nginx.metadata[0].name
+  repository = "https://kubernetes.github.io/ingress-nginx"
   version    = "3.6.0"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
