@@ -1,15 +1,3 @@
-variable "dependence_opa" {
-  description = "OPA module dependences in order to be executed."
-}
-
-variable "dependence_prometheus" {
-  description = "Prometheus module dependences in order to be executed."
-}
-
-variable "dependence_certmanager" {
-  description = "This module deploys lets-encrypt certs, so it depends on certmanager"
-}
-
 variable "is_live_cluster" {
   description = "For live clusters externalDNS annotation will have var.live_domain (default *.cloud-platform.service.justice.gov.uk)"
   type        = bool
@@ -24,4 +12,3 @@ variable "live_domain" {
 variable "cluster_domain_name" {
   description = "The cluster domain used for externalDNS annotations and certmanager"
 }
-

@@ -48,16 +48,6 @@ resource "helm_release" "nginx_ingress" {
     external_dns_annotation = local.external_dns_annotation
   })]
 
-  // Although it _does_ depend on cert-manager for getting the default
-  // certificate issued, it's not a hard dependency and will resort to using a
-  // self-signed certificate until the proper one becomes available. This
-  // dependency is not captured here.
-  depends_on = [
-    var.dependence_prometheus,
-    var.dependence_opa,
-    var.dependence_certmanager
-  ]
-
   lifecycle {
     ignore_changes = [keyring]
   }
@@ -65,7 +55,6 @@ resource "helm_release" "nginx_ingress" {
 
 
 # Default Lets-Encrypt cert 
-
 data "template_file" "nginx_ingress_default_certificate" {
   template = file(
     "${path.module}/templates/default-certificate.yaml.tpl",
@@ -78,8 +67,6 @@ data "template_file" "nginx_ingress_default_certificate" {
 }
 
 resource "null_resource" "nginx_ingress_default_certificate" {
-  depends_on = [var.dependence_certmanager]
-
   provisioner "local-exec" {
     command = <<EOS
 kubectl apply -n ingress-controllers -f - <<EOF

@@ -20,19 +20,7 @@ module "ingress_controllers" {
 }
 ```
 
-## Inputs
+<!--- BEGIN_TF_DOCS --->
 
-| Name                            | Description                                                   | Type | Default | Required |
-|---------------------------------|---------------------------------------------------------------|:----:|:-------:|:--------:|
-| dependence_prometheus  | Prometheus Dependence variable                                         | string   |       | yes |
-| dependence_opa         | Priority class dependence                                              | string   |       | yes |
-| dependence_certmanager | This module deploys lets-encrypt certs, so it depends on certmanager   | string   |       | yes |
-| cluster_domain_name    | Value used for externalDNS annotations and certmanager                 | string   |       | yes |
-| is_live_cluster        | For live clusters externalDNS annotation will have var.live_domain (default *.cloud-platform.service.justice.gov.uk) | bool   |   false    | yes |
-| live_domain            | The live domain used for externalDNS annotation (only for prod clusters) | string   |  cloud-platform.service.justice.gov.uk  | no |
+<!--- END_TF_DOCS --->
 
-## Outputs
-
-```
-helm_nginx_ingress_status
-```
