@@ -41,7 +41,7 @@ resource "helm_release" "nginx_ingress" {
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_controllers.id
   repository = "https://kubernetes.github.io/ingress-nginx"
-  version    = "3.6.0"
+  version    = "3.33.0"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = kubernetes_namespace.ingress_controllers.id
@@ -54,7 +54,6 @@ resource "helm_release" "nginx_ingress" {
   // dependency is not captured here.
   depends_on = [
     var.dependence_prometheus,
-    var.dependence_opa,
     var.dependence_certmanager
   ]
 
