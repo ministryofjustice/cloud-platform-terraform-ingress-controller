@@ -74,6 +74,7 @@ data "template_file" "nginx_ingress_default_certificate" {
   vars = {
     common_name = "*.apps.${var.cluster_domain_name}"
     alt_name    = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
+    live1_dns   = var.live1_cert_dns_name
   }
 }
 

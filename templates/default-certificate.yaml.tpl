@@ -11,3 +11,4 @@ spec:
   dnsNames:
     - '${common_name}'
     ${alt_name}
+    ${live1_dns}
