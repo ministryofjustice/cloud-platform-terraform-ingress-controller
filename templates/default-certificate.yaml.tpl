@@ -10,5 +10,6 @@ spec:
     kind: ClusterIssuer
   dnsNames:
     - '${common_name}'
+    - '${cluster_name}'
     ${alt_name}
     ${live1_dns}
