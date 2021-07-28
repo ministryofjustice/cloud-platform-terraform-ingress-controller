@@ -1,4 +1,9 @@
 controller:
+  image:
+    registry: k8s.gcr.io
+    image: ingress-nginx/controller
+    tag: "v1.0.0-alpha.2"
+    digest: sha256:04a0ad3a1279c2a58898e789eed767eafa138ee1e5b9b23a988c6e8485cf958d
   replicaCount: 6
   
   updateStrategy:
