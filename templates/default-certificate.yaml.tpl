@@ -9,7 +9,8 @@ spec:
     name: letsencrypt-production
     kind: ClusterIssuer
   dnsNames:
-    - '${common_name}'
+    - '${apps_cluster_name}'
     - '${cluster_name}'
     ${alt_name}
+    ${apps_alt_name}
     ${live1_dns}
