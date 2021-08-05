@@ -26,5 +26,5 @@ variable "cluster_domain_name" {
 }
 variable "live1_cert_dns_name" {
   description = "This is to add the live-1 dns name for eks-live cluster default certificate"
-  default = ""
+  default     = ""
 }

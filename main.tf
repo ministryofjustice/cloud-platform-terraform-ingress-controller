@@ -78,24 +78,6 @@ data "template_file" "nginx_ingress_default_certificate" {
   }
 }
 
-resource "null_resource" "nginx_ingress_default_certificate" {
-  depends_on = [var.dependence_certmanager]
-
-  provisioner "local-exec" {
-    command = <<EOS
-kubectl apply -n ingress-controllers -f - <<EOF
-${data.template_file.nginx_ingress_default_certificate.rendered}
-EOF
-EOS
-
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "kubectl -n ingress-controllers delete certificate default"
-  }
-
-  triggers = {
-    contents = sha1(data.template_file.nginx_ingress_default_certificate.rendered)
-  }
+resource "kubectl_manifest" "default_cert" {
+  yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 }
