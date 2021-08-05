@@ -65,8 +65,11 @@ resource "helm_release" "nginx_ingress" {
 
 
 # Default Lets-Encrypt cert 
-data "kubectl_path_documents" "nginx_ingress_default_certificate" {
-    pattern = "${path.module}/templates/default-certificate.yaml.tpl"
+data "template_file" "nginx_ingress_default_certificate" {
+  template = file(
+    "${path.module}/templates/default-certificate.yaml.tpl",
+  )
+
   vars = {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
@@ -77,8 +80,7 @@ data "kubectl_path_documents" "nginx_ingress_default_certificate" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
-  count     = length(data.kubectl_path_documents.nginx_ingress_default_certificate.documents)
-  yaml_body = element(data.kubectl_path_documents.nginx_ingress_default_certificate.documents, count.index)
+  yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 
   depends_on = [var.dependence_certmanager]
 }
