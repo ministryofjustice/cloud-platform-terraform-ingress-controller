@@ -65,37 +65,20 @@ resource "helm_release" "nginx_ingress" {
 
 
 # Default Lets-Encrypt cert 
-
-data "template_file" "nginx_ingress_default_certificate" {
-  template = file(
-    "${path.module}/templates/default-certificate.yaml.tpl",
-  )
-
+data "kubectl_path_documents" "nginx_ingress_default_certificate" {
+    pattern = "${path.module}/templates/default-certificate.yaml.tpl"
   vars = {
-    common_name = "*.apps.${var.cluster_domain_name}"
-    alt_name    = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
-    live1_dns   = var.live1_cert_dns_name
+    apps_cluster_name = "*.apps.${var.cluster_domain_name}"
+    cluster_name      = "*.${var.cluster_domain_name}"
+    alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
+    apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
+    live1_dns         = var.live1_cert_dns_name
   }
 }
 
-resource "null_resource" "nginx_ingress_default_certificate" {
+resource "kubectl_manifest" "nginx_ingress_default_certificate" {
+  count     = length(data.kubectl_path_documents.nginx_ingress_default_certificate.documents)
+  yaml_body = element(data.kubectl_path_documents.nginx_ingress_default_certificate.documents, count.index)
+
   depends_on = [var.dependence_certmanager]
-
-  provisioner "local-exec" {
-    command = <<EOS
-kubectl apply -n ingress-controllers -f - <<EOF
-${data.template_file.nginx_ingress_default_certificate.rendered}
-EOF
-EOS
-
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "kubectl -n ingress-controllers delete certificate default"
-  }
-
-  triggers = {
-    contents = sha1(data.template_file.nginx_ingress_default_certificate.rendered)
-  }
 }
