@@ -3,7 +3,7 @@
 ##########
 
 locals {
-  external_dns_annotation = "*.apps.${var.cluster_domain_name},apps.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
+  external_dns_annotation = "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
 }
 
 #############
