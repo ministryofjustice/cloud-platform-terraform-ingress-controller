@@ -7,7 +7,10 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
-  ingressClass: ${controller_name}
+  ingressClassResource:
+    name: ${controller_name}
+    default: ${default}
+
   electionID: ingress-controller-leader-${controller_name}
 
   livenessProbe:

@@ -52,6 +52,7 @@ resource "helm_release" "nginx_ingress" {
     controller_name         = var.controller_name
     enable_modsec           = var.enable_modsec
     enable_owasp            = var.enable_owasp
+    default                 = var.controller_name == "acme" ? 1 : 0
   })]
 
   lifecycle {
