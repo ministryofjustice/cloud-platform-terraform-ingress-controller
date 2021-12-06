@@ -40,7 +40,7 @@ resource "kubernetes_namespace" "ingress_controllers" {
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-${var.controller_name}"
   chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress_controllers.id
+  namespace  = kubernetes_namespace.ingress_controllers[0].id
   repository = "https://kubernetes.github.io/ingress-nginx"
   version    = "4.0.12"
 
@@ -67,6 +67,7 @@ data "template_file" "nginx_ingress_default_certificate" {
   vars = {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
+    namespace         = kubernetes_namespace.ingress_controllers[0].id
     alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
