@@ -40,12 +40,12 @@ resource "kubernetes_namespace" "ingress_controllers" {
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-${var.controller_name}"
   chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress_controllers[0].id
+  namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   version    = "4.0.12"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
-    metrics_namespace       = kubernetes_namespace.ingress_controllers[0].id
+    metrics_namespace       = "ingress-controllers"
     external_dns_annotation = local.external_dns_annotation
     replica_count           = var.replica_count
     default_cert            = var.default_cert
@@ -69,7 +69,7 @@ data "template_file" "nginx_ingress_default_certificate" {
   vars = {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
-    namespace         = kubernetes_namespace.ingress_controllers[0].id
+    namespace         = "ingress-controllers"
     alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
