@@ -11,7 +11,7 @@ locals {
 #############
 
 resource "kubernetes_namespace" "ingress_controllers" {
-  count = var.controller_name == "acme" ? 1 : 0
+  count = var.controller_name == "nginx" ? 1 : 0
   metadata {
     name = "ingress-controllers"
 
@@ -52,7 +52,7 @@ resource "helm_release" "nginx_ingress" {
     controller_name         = var.controller_name
     enable_modsec           = var.enable_modsec
     enable_owasp            = var.enable_owasp
-    default                 = var.controller_name == "acme" ? 1 : 0
+    default                 = var.controller_name == "nginx" ? 1 : 0
   })]
 
   lifecycle {
@@ -78,6 +78,6 @@ data "template_file" "nginx_ingress_default_certificate" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
-  count     = var.controller_name == "acme" ? 1 : 0
+  count     = var.controller_name == "nginx" ? 1 : 0
   yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 }
