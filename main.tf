@@ -11,6 +11,7 @@ locals {
 #############
 
 resource "kubernetes_namespace" "ingress_controllers" {
+  count = controller_name == "acme" ? 1 : 0
   metadata {
     name = "ingress-controllers"
 
@@ -37,7 +38,7 @@ resource "kubernetes_namespace" "ingress_controllers" {
 ########
 
 resource "helm_release" "nginx_ingress" {
-  name       = "nginx-ingress-acme"
+  name       = "nginx-ingress-${controller_name}"
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_controllers.id
   repository = "https://kubernetes.github.io/ingress-nginx"
@@ -48,7 +49,7 @@ resource "helm_release" "nginx_ingress" {
     external_dns_annotation = local.external_dns_annotation
     replica_count           = var.replica_count
     default_cert            = var.default_cert
-
+    controller_name         = var.controller_name
   })]
 
   lifecycle {
@@ -73,6 +74,6 @@ data "template_file" "nginx_ingress_default_certificate" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
+  count = controller_name == "acme" ? 1 : 0
   yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
-
 }
