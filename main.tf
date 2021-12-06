@@ -46,6 +46,7 @@ resource "helm_release" "nginx_ingress" {
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = kubernetes_namespace.ingress_controllers.id
     external_dns_annotation = local.external_dns_annotation
+    replica_count           = var.replica_count
   })]
 
   lifecycle {
