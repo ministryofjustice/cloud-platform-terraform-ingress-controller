@@ -47,6 +47,8 @@ resource "helm_release" "nginx_ingress" {
     metrics_namespace       = kubernetes_namespace.ingress_controllers.id
     external_dns_annotation = local.external_dns_annotation
     replica_count           = var.replica_count
+    default_cert            = var.default_cert
+
   })]
 
   lifecycle {

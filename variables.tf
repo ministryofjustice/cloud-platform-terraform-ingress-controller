@@ -22,3 +22,14 @@ variable "replica_count" {
   type        = string
   description = "Number of replicas set in deployment"
 }
+
+variable "controller_name" {
+  type        = string
+  description = "Will be used as the ingress controller name and the class annotation"
+}
+
+variable "default_cert" {
+  type        = string
+  description = "Useful if you want to use a default certificate for your ingress controller. Format: namespace/secretName"
+  default     = "ingress-controllers/default-certificate"
+}

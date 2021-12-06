@@ -7,7 +7,8 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
-  electionID: ingress-controller-leader-acme
+  ingressClass: ${controller_name}
+  electionID: ingress-controller-leader-${controller_name}
 
   livenessProbe:
     initialDelaySeconds: 20
@@ -104,8 +105,10 @@ controller:
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     externalTrafficPolicy: "Local"
 
+%{ if default_cert != "" }
   extraArgs:
-    default-ssl-certificate: ingress-controllers/default-certificate
+    default-ssl-certificate: ${default_cert}
+%{~ endif ~}
   
   admissionWebhooks:
     enabled: true
