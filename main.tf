@@ -72,5 +72,4 @@ data "template_file" "nginx_ingress_default_certificate" {
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
   yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 
-  depends_on = [var.dependence_certmanager]
 }
