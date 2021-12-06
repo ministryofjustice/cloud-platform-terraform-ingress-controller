@@ -33,3 +33,15 @@ variable "default_cert" {
   description = "Useful if you want to use a default certificate for your ingress controller. Format: namespace/secretName"
   default     = "ingress-controllers/default-certificate"
 }
+
+variable "enable_modsec" {
+  description = "Enable https://github.com/SpiderLabs/ModSecurity-nginx"
+  type        = bool
+  default     = false
+}
+
+variable "enable_owasp" {
+  description = "Use default ruleset from https://github.com/SpiderLabs/owasp-modsecurity-crs/"
+  type        = bool
+  default     = false
+}

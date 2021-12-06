@@ -21,7 +21,8 @@ controller:
     timeoutSeconds: 5
 
   config:
-    enable-modsecurity: "false"
+    enable-modsecurity: ${enable_modsec}
+    enable-owasp-modsecurity-crs: ${enable_owasp}
     server-tokens: "false"
     custom-http-errors: 413,502,503,504
     generate-request-id: "true"
