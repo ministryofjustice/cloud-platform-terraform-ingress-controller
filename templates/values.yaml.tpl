@@ -136,7 +136,7 @@ controller:
       enabled: true
       image:
         repository: jettech/kube-webhook-certgen
-        tag: v1.5.2
+        tag: v1.5.1
         pullPolicy: IfNotPresent
       ## Provide a priority class name to the webhook patching job
       ##
