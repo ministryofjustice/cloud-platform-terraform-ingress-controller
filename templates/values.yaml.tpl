@@ -134,17 +134,6 @@ controller:
 
     patch:
       enabled: true
-      image:
-        repository: jettech/kube-webhook-certgen
-        tag: v1.5.1
-        pullPolicy: IfNotPresent
-      ## Provide a priority class name to the webhook patching job
-      ##
-      priorityClassName: ""
-      podAnnotations: {}
-      nodeSelector: {}
-      tolerations: []
-      runAsUser: 2000
 
 defaultBackend:
   enabled: true
