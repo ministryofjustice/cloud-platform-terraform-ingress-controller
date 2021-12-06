@@ -135,7 +135,7 @@ controller:
     patch:
       enabled: true
       image:
-        repository: docker.io/jettech/kube-webhook-certgen
+        repository: jettech/kube-webhook-certgen
         tag: v1.5.2
         pullPolicy: IfNotPresent
       ## Provide a priority class name to the webhook patching job
