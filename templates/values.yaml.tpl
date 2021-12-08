@@ -7,6 +7,7 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
+  ingressClassByName: true
   ingressClassResource:
     name: ${controller_name}
     default: ${default}
