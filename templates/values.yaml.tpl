@@ -7,6 +7,7 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
+  watchIngressWithoutClass: ${default}
   ingressClassByName: true
   ingressClassResource:
     name: ${controller_name}
