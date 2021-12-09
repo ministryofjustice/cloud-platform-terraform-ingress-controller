@@ -1,3 +1,4 @@
+nameOverride: ${name_override}
 controller:
   replicaCount: ${replica_count}
   
