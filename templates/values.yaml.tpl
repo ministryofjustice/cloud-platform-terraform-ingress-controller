@@ -9,7 +9,7 @@ controller:
 
   minReadySeconds: 12
   watchIngressWithoutClass: ${default}
-  ingressClassByName: true
+  ingressClassByName: false
   ingressClassResource:
     name: ${controller_name}
     default: ${default}

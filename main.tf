@@ -53,7 +53,7 @@ resource "helm_release" "nginx_ingress" {
     controller_value        = var.controller_name == "nginx" ? "k8s.io/ingress-nginx" : "k8s.io/ingress-${var.controller_name}"
     enable_modsec           = var.enable_modsec
     enable_owasp            = var.enable_owasp
-    default                 = var.controller_name == "nginx" ? 1 : 0
+    default                 = var.controller_name == "nginx" ? true : false
     name_override           = var.controller_name == "nginx" ? "ingress-nginx" : "ingress-${var.controller_name}"
   })]
 
