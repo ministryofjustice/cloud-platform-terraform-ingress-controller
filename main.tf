@@ -50,6 +50,7 @@ resource "helm_release" "nginx_ingress" {
     replica_count           = var.replica_count
     default_cert            = var.default_cert
     controller_name         = var.controller_name
+    controller_value        = var.controller_name == "nginx" ? "k8s.io/ingress-nginx" : "k8s.io/${var.controller_name}-ingress-nginx"
     enable_modsec           = var.enable_modsec
     enable_owasp            = var.enable_owasp
     default                 = var.controller_name == "nginx" ? 1 : 0

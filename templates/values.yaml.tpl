@@ -12,7 +12,7 @@ controller:
   ingressClassResource:
     name: ${controller_name}
     default: ${default}
-    controllerValue: "k8s.io/ingress-${controller_name}"
+    controllerValue: ${controller_value}
 
   electionID: ingress-controller-leader-${controller_name}
 
