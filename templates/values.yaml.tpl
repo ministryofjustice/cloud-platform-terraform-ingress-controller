@@ -1,6 +1,6 @@
 controller:
   replicaCount: 6
-  
+
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -31,6 +31,35 @@ controller:
     ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA"
     ssl-protocols: "TLSv1 TLSv1.1 TLSv1.2"
     server-snippet: |
+      lua_need_request_body on;
+
+        set $resp_body "";
+        set $req_body "";
+        set $req_headers "";
+
+# LUA block to detect, block and log Log4Shell attacks (C) Infiniroot 2021 (@infiniroot)
+# with lua fixes from Andreas Nanko (@andreasnanko)
+        rewrite_by_lua_block {
+        local req_headers = "Headers: ";
+        ngx.var.req_body = ngx.req.get_body_data();
+        local h, err = ngx.req.get_headers()
+        for k, v in pairs(h) do
+        req_headers = req_headers .. k .. ": " .. tostring(v) .. "\n";
+        if v then
+            if string.match(string.lower(tostring(v)), "{jndi:") or string.match(v, '${lower:j}') or string.match(v, '${upper:j}') or string.match(v, "${::-j}") then
+            ngx.log(ngx.ERR, 'Found potential log4j attack in header ' .. k .. ':' .. tostring(v))
+            ngx.exit(ngx.HTTP_FORBIDDEN)
+            end
+        else
+            if err then
+            ngx.log(ngx.ERR, "error: ", err)
+            return
+            end
+        end
+        end
+
+        ngx.var.req_headers = req_headers;
+        }
       if ($scheme != 'https') {
         return 308 https://$host$request_uri;
       }
@@ -106,7 +135,7 @@ controller:
 
   extraArgs:
     default-ssl-certificate: ingress-controllers/default-certificate
-  
+
   admissionWebhooks:
     enabled: true
     annotations: {}
