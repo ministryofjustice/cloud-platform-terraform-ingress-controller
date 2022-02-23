@@ -7,11 +7,6 @@ module "ingress_controllers" {
   is_live_cluster     = false
   live1_cert_dns_name = "dummy"
 
-  depends_on = [
-    module.cert_manager,
-    module.monitoring
-  ]
-
 }
 
 module "modsec_ingress_controllers" {
