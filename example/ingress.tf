@@ -1,5 +1,5 @@
 module "ingress_controllers" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-ingress-controller?ref=1.0.0"
+  source = "../
 
   replica_count       = "1"
   controller_name     = "default"
@@ -15,7 +15,7 @@ module "ingress_controllers" {
 }
 
 module "modsec_ingress_controllers" {
-  source = "github.com/ministryofjustice/cloud-platform-terraform-ingress-controller?ref=1.0.0"
+  source = "../"
 
   replica_count       = "1"
   controller_name     = "modsec"
