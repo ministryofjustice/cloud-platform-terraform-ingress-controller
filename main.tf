@@ -11,6 +11,7 @@ locals {
 #############
 
 resource "kubernetes_namespace" "ingress_controllers" {
+  count = var.controller_name == "nginx" ? 1 : 0
   metadata {
     name = "ingress-controllers"
 
@@ -37,25 +38,27 @@ resource "kubernetes_namespace" "ingress_controllers" {
 ########
 
 resource "helm_release" "nginx_ingress" {
-  name       = "nginx-ingress-acme"
+  name       = "nginx-ingress-${var.controller_name}"
   chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress_controllers.id
+  namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
-  version    = "3.34.0"
+  version    = "4.0.17"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
-    metrics_namespace       = kubernetes_namespace.ingress_controllers.id
+    metrics_namespace       = "ingress-controllers"
     external_dns_annotation = local.external_dns_annotation
+    replica_count           = var.replica_count
+    default_cert            = var.default_cert
+    controller_name         = var.controller_name
+    controller_value        = var.controller_name == "nginx" ? "k8s.io/ingress-nginx" : "k8s.io/ingress-${var.controller_name}"
+    enable_modsec           = var.enable_modsec
+    enable_owasp            = var.enable_owasp
+    default                 = var.controller_name == "nginx" ? true : false
+    name_override           = var.controller_name == "nginx" ? "ingress-nginx" : "ingress-${var.controller_name}"
   })]
 
-  // Although it _does_ depend on cert-manager for getting the default
-  // certificate issued, it's not a hard dependency and will resort to using a
-  // self-signed certificate until the proper one becomes available. This
-  // dependency is not captured here.
   depends_on = [
-    var.dependence_prometheus,
-    var.dependence_opa,
-    var.dependence_certmanager
+    kubernetes_namespace.ingress_controllers,
   ]
 
   lifecycle {
@@ -73,6 +76,7 @@ data "template_file" "nginx_ingress_default_certificate" {
   vars = {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
+    namespace         = "ingress-controllers"
     alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
@@ -80,7 +84,29 @@ data "template_file" "nginx_ingress_default_certificate" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
+  count     = var.controller_name == "nginx" ? 1 : 0
   yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 
-  depends_on = [var.dependence_certmanager]
+  depends_on = [
+    kubernetes_namespace.ingress_controllers,
+  ]
+}
+
+resource "kubernetes_config_map" "modsecurity_nginx_config" {
+  count = var.enable_modsec ? 1 : 0
+
+  metadata {
+    name      = "modsecurity-nginx-config"
+    namespace = "ingress-controllers"
+    labels = {
+      "k8s-app" = var.controller_name
+    }
+  }
+  data = {
+    "modsecurity.conf" = file("${path.module}/templates/modsecurity.conf"),
+  }
+
+  lifecycle {
+    ignore_changes = [metadata.0.annotations]
+  }
 }

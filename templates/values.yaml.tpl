@@ -1,13 +1,36 @@
+nameOverride: ${name_override}
 controller:
-  replicaCount: 6
-  
+  replicaCount: ${replica_count}
+
+%{ if enable_modsec ~}
+  extraVolumeMounts:
+  ## Additional volumeMounts to the controller main container.
+    - name: modsecurity-nginx-config
+      mountPath: /etc/nginx/modsecurity/modsecurity.conf
+      subPath: modsecurity.conf
+      readOnly: true
+
+  extraVolumes:
+  ## Additional volumes to the controller pod.
+    - name: modsecurity-nginx-config
+      configMap:
+        name: modsecurity-nginx-config
+%{ endif ~}
+
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
     type: RollingUpdate
 
   minReadySeconds: 12
-  electionID: ingress-controller-leader-acme
+  watchIngressWithoutClass: ${default}
+  ingressClassByName: ${default}
+  ingressClassResource:
+    name: ${controller_name}
+    default: ${default}
+    controllerValue: ${controller_value}
+
+  electionID: ingress-controller-leader-${controller_name}
 
   livenessProbe:
     initialDelaySeconds: 20
@@ -20,7 +43,8 @@ controller:
     timeoutSeconds: 5
 
   config:
-    enable-modsecurity: "false"
+    enable-modsecurity: ${enable_modsec}
+    enable-owasp-modsecurity-crs: ${enable_owasp}
     server-tokens: "false"
     custom-http-errors: 413,502,503,504
     generate-request-id: "true"
@@ -104,8 +128,10 @@ controller:
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     externalTrafficPolicy: "Local"
 
+%{ if default_cert != "" }
   extraArgs:
-    default-ssl-certificate: ingress-controllers/default-certificate
+    default-ssl-certificate: ${default_cert}
+%{~ endif ~}
   
   admissionWebhooks:
     enabled: true
@@ -130,17 +156,6 @@ controller:
 
     patch:
       enabled: true
-      image:
-        repository: docker.io/jettech/kube-webhook-certgen
-        tag: v1.5.0
-        pullPolicy: IfNotPresent
-      ## Provide a priority class name to the webhook patching job
-      ##
-      priorityClassName: ""
-      podAnnotations: {}
-      nodeSelector: {}
-      tolerations: []
-      runAsUser: 2000
 
 defaultBackend:
   enabled: true
