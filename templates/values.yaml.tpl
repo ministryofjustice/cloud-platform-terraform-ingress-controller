@@ -1,7 +1,22 @@
 nameOverride: ${name_override}
 controller:
   replicaCount: ${replica_count}
-  
+
+%{ if enable_modsec ~}
+  extraVolumeMounts:
+  ## Additional volumeMounts to the controller main container.
+    - name: modsecurity-nginx-config
+      mountPath: /etc/nginx/modsecurity/modsecurity.conf
+      subPath: modsecurity.conf
+      readOnly: true
+
+  extraVolumes:
+  ## Additional volumes to the controller pod.
+    - name: modsecurity-nginx-config
+      configMap:
+        name: modsecurity-nginx-config
+%{ endif ~}
+
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
