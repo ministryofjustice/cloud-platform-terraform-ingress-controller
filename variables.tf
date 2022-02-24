@@ -28,3 +28,13 @@ variable "live1_cert_dns_name" {
   description = "This is to add the live-1 dns name for eks-live cluster default certificate"
   default     = ""
 }
+
+variable "backend_repo" {
+  description = "repository for the default backend app"
+  default = "ministryofjustice/cloud-platform-custom-error-pages"
+}
+
+variable "backend_tag" {
+  description = "tag of the default backend app"
+  default = "0.6"
+}
