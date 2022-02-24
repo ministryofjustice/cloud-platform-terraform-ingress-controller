@@ -34,6 +34,7 @@ No Modules.
 |------|
 | [helm_release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) |
 | [kubectl_manifest](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) |
+| [kubernetes_config_map](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) |
 | [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) |
 | [template_file](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) |
 
