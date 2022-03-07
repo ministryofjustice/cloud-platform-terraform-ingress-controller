@@ -22,6 +22,7 @@ controller:
       maxUnavailable: 1
     type: RollingUpdate
 
+  ingressClass: ${controller_name}
   minReadySeconds: 12
   watchIngressWithoutClass: ${default}
   ingressClassByName: ${default}
