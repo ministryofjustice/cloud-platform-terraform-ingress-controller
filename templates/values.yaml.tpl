@@ -23,12 +23,26 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
+
+  # -- Process Ingress objects without ingressClass annotation/ingressClassName field
+  # Overrides value for --watch-ingress-without-class flag of the controller binary
+  # Defaults to false
   watchIngressWithoutClass: ${default}
+  # -- Process IngressClass per name (additionally as per spec.controller).
   ingressClassByName: ${default}
+
+  ## This section refers to the creation of the IngressClass resource
   ingressClassResource:
+    # -- Name of the ingressClass
     name: ${controller_name}
+    # -- Is this the default ingressClass for the cluster
     default: ${default}
+    # -- Controller-value of the controller that is processing this ingressClass
     controllerValue: ${controller_value}
+
+  # -- For backwards compatibility with ingress.class annotation, use ingressClass.
+  # Algorithm is as follows, first ingressClassName is considered, if not present, controller looks for ingress.class annotation
+  ingressClass: ${controller_name}
 
   electionID: ingress-controller-leader-${controller_name}
 
@@ -50,10 +64,15 @@ controller:
     generate-request-id: "true"
     proxy-buffer-size: "16k"
     proxy-body-size: "50m"
+
+%{ if enable_latest_tls }
+    ssl-protocols: "TLSv1.2 TLSv1.3"
+%{ else ~}  
     # Config below is for old TLS versions. Specifically an incident with IE11 on
     # bank-admin.prisoner-money.service.justice.gov.uk. More info CP Incidents page.
     ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA"
     ssl-protocols: "TLSv1 TLSv1.1 TLSv1.2"
+%{ endif ~}
     server-snippet: |
       if ($scheme != 'https') {
         return 308 https://$host$request_uri;

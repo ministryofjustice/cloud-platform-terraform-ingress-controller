@@ -45,6 +45,7 @@ No Modules.
 | cluster\_domain\_name | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
 | controller\_name | Will be used as the ingress controller name and the class annotation | `string` | n/a | yes |
 | default\_cert | Useful if you want to use a default certificate for your ingress controller. Format: namespace/secretName | `string` | `"ingress-controllers/default-certificate"` | no |
+| enable\_latest\_tls | Provide support to tlsv1.3 along with tlsv1.2 | `bool` | `false` | no |
 | enable\_modsec | Enable https://github.com/SpiderLabs/ModSecurity-nginx | `bool` | `false` | no |
 | enable\_owasp | Use default ruleset from https://github.com/SpiderLabs/owasp-modsecurity-crs/ | `bool` | `false` | no |
 | is\_live\_cluster | For live clusters externalDNS annotation will have var.live\_domain (default *.cloud-platform.service.justice.gov.uk) | `bool` | `false` | no |

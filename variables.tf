@@ -45,3 +45,9 @@ variable "enable_owasp" {
   type        = bool
   default     = false
 }
+
+variable "enable_latest_tls" {
+  description = "Provide support to tlsv1.3 along with tlsv1.2"
+  type        = bool
+  default     = false
+}
