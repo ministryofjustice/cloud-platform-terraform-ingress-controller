@@ -142,7 +142,9 @@ controller:
 
   service:
     annotations:
+%{ if enable_external_dns_annotation }
       external-dns.alpha.kubernetes.io/hostname: "${external_dns_annotation}"
+%{~ endif ~}
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     externalTrafficPolicy: "Local"
