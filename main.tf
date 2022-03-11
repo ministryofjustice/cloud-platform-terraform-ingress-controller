@@ -45,17 +45,18 @@ resource "helm_release" "nginx_ingress" {
   version    = "4.0.17"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
-    metrics_namespace       = "ingress-controllers"
-    external_dns_annotation = local.external_dns_annotation
-    replica_count           = var.replica_count
-    default_cert            = var.default_cert
-    controller_name         = var.controller_name
-    controller_value        = var.controller_name == "nginx" ? "k8s.io/ingress-nginx" : "k8s.io/ingress-${var.controller_name}"
-    enable_modsec           = var.enable_modsec
-    enable_latest_tls       = var.enable_latest_tls
-    enable_owasp            = var.enable_owasp
-    default                 = var.controller_name == "nginx" ? true : false
-    name_override           = var.controller_name == "nginx" ? "ingress-nginx" : "ingress-${var.controller_name}"
+    metrics_namespace               = "ingress-controllers"
+    external_dns_annotation         = local.external_dns_annotation
+    replica_count                   = var.replica_count
+    default_cert                    = var.default_cert
+    controller_name                 = var.controller_name
+    controller_value                = var.controller_name == "nginx" ? "k8s.io/ingress-nginx" : "k8s.io/ingress-${var.controller_name}"
+    enable_modsec                   = var.enable_modsec
+    enable_latest_tls               = var.enable_latest_tls
+    enable_owasp                    = var.enable_owasp
+    default                         = var.controller_name == "nginx" ? true : false
+    name_override                   = var.controller_name == "nginx" ? "ingress-nginx" : "ingress-${var.controller_name}"
+    enable_external_dns_annotation  = var.enable_external_dns_annotation
   })]
 
   depends_on = [

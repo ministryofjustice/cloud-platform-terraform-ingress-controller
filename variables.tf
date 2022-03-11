@@ -51,3 +51,9 @@ variable "enable_latest_tls" {
   type        = bool
   default     = false
 }
+
+variable "enable_external_dns_annotation" {
+  description = "Add external dns annotation for service"
+  type        = bool
+  default     = false
+}
