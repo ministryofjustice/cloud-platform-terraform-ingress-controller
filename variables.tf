@@ -26,6 +26,7 @@ variable "backend_repo" {
 variable "backend_tag" {
   description = "tag of the default backend app"
   default     = "0.6"
+}
 
 variable "replica_count" {
   type        = string
