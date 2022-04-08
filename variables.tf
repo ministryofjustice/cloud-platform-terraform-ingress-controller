@@ -31,10 +31,10 @@ variable "live1_cert_dns_name" {
 
 variable "backend_repo" {
   description = "repository for the default backend app"
-  default = "ministryofjustice/cloud-platform-custom-error-pages"
+  default     = "ministryofjustice/cloud-platform-custom-error-pages"
 }
 
 variable "backend_tag" {
   description = "tag of the default backend app"
-  default = "0.6"
+  default     = "0.6"
 }
