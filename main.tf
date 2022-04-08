@@ -82,6 +82,8 @@ data "template_file" "nginx_ingress_default_certificate" {
     alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
+    backend_repo      = var.backend_repo
+    backend_tag       = var.backend_tag
   }
 }
 

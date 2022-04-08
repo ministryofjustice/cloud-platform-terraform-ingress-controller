@@ -18,6 +18,16 @@ variable "live1_cert_dns_name" {
   default     = ""
 }
 
+variable "backend_repo" {
+  description = "repository for the default backend app"
+  default     = "ministryofjustice/cloud-platform-custom-error-pages"
+}
+
+variable "backend_tag" {
+  description = "tag of the default backend app"
+  default     = "0.6"
+}
+
 variable "replica_count" {
   type        = string
   description = "Number of replicas set in deployment"

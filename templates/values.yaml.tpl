@@ -182,8 +182,8 @@ defaultBackend:
   enabled: true
   name: default-backend
   image:
-    repository: ministryofjustice/cloud-platform-custom-error-pages
-    tag: "0.6"
+    repository: "${backend_repo}"
+    tag: "${backend_tag}"
 
 rbac:
   create: true
