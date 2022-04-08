@@ -42,6 +42,8 @@ No Modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| backend\_repo | repository for the default backend app | `string` | `"ministryofjustice/cloud-platform-custom-error-pages"` | no |
+| backend\_tag | tag of the default backend app | `string` | `"0.6"` | no |
 | cluster\_domain\_name | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
 | controller\_name | Will be used as the ingress controller name and the class annotation | `string` | n/a | yes |
 | default\_cert | Useful if you want to use a default certificate for your ingress controller. Format: namespace/secretName | `string` | `"ingress-controllers/default-certificate"` | no |
