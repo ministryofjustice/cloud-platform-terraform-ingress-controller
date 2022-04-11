@@ -42,7 +42,7 @@ resource "helm_release" "nginx_ingress" {
   chart      = "ingress-nginx"
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
-  version    = "4.0.18"
+  version    = "4.0.19"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace              = "ingress-controllers"
