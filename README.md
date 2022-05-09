@@ -62,4 +62,7 @@ No Modules.
 |------|-------------|
 | helm\_nginx\_ingress\_status | n/a |
 
+## last-kops-release-do-not-delete
+This release contains terraform for kops
+
 <!--- END_TF_DOCS --->
