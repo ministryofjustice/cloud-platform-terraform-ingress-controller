@@ -1,7 +1,7 @@
 nameOverride: ${name_override}
 controller:
   image:
-    chroot: true
+    chroot: false
   replicaCount: ${replica_count}
 
 %{ if enable_modsec ~}
