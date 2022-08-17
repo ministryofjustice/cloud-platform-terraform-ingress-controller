@@ -63,6 +63,7 @@ resource "helm_release" "nginx_ingress" {
 
   depends_on = [
     kubernetes_namespace.ingress_controllers,
+    kubernetes_config_map.modsecurity_nginx_config
   ]
 
   lifecycle {
@@ -111,7 +112,7 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
   }
 
   depends_on = [
-    helm_release.nginx_ingress,
+    kubernetes_namespace.ingress_controllers,
   ]
 
   lifecycle {
