@@ -110,6 +110,10 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
     "modsecurity.conf" = file("${path.module}/templates/modsecurity.conf"),
   }
 
+  depends_on = [
+    helm_release.nginx_ingress,
+  ]
+
   lifecycle {
     ignore_changes = [metadata.0.annotations]
   }
