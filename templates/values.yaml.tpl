@@ -58,6 +58,14 @@ controller:
     periodSeconds: 20
     timeoutSeconds: 5
 
+  resources:
+    limits:
+      cpu: 500m
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
   config:
     enable-modsecurity: ${enable_modsec}
     enable-owasp-modsecurity-crs: ${enable_owasp}
