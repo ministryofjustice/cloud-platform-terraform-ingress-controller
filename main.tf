@@ -92,7 +92,7 @@ data "template_file" "nginx_ingress_default_certificate" {
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
   count     = var.controller_name == "nginx" ? 1 : 0
-  yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
+  yaml_body = data.template_file.nginx_ingress_default_certificate[count.index].rendered
 
   depends_on = [
     kubernetes_namespace.ingress_controllers,
