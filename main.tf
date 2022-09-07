@@ -75,6 +75,7 @@ resource "helm_release" "nginx_ingress" {
 
 # Default Lets-Encrypt cert 
 data "template_file" "nginx_ingress_default_certificate" {
+  count     = var.controller_name == "nginx" ? 1 : 0
   template = file(
     "${path.module}/templates/default-certificate.yaml.tpl",
   )
