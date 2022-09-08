@@ -63,6 +63,7 @@ resource "helm_release" "nginx_ingress" {
 
   depends_on = [
     kubernetes_namespace.ingress_controllers,
+    kubernetes_config_map.modsecurity_nginx_config
   ]
 
   lifecycle {
@@ -109,6 +110,10 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
   data = {
     "modsecurity.conf" = file("${path.module}/templates/modsecurity.conf"),
   }
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers,
+  ]
 
   lifecycle {
     ignore_changes = [metadata.0.annotations]
