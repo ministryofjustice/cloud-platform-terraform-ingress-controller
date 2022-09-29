@@ -60,11 +60,9 @@ controller:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 4Gi
+      memory: 8Gi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      memory: 512Mi
 
   config:
     enable-modsecurity: ${enable_modsec}
