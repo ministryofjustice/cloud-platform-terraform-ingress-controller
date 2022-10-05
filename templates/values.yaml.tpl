@@ -1,5 +1,5 @@
 controller:
-  replicaCount: 6
+  replicaCount: ${replica_count}
   
   updateStrategy:
     rollingUpdate:

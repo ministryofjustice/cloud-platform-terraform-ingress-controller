@@ -28,3 +28,8 @@ variable "live1_cert_dns_name" {
   description = "This is to add the live-1 dns name for eks-live cluster default certificate"
   default     = ""
 }
+
+variable "replica_count" {
+  type        = string
+  description = "Number of replicas set in deployment"
+}
