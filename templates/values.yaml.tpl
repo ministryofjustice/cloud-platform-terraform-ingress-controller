@@ -75,6 +75,7 @@ controller:
 
 %{ if enable_latest_tls }
     ssl-protocols: "TLSv1.2 TLSv1.3"
+    ssl-ciphers: "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384:TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256:TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA:TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"
 %{ else ~}  
     # Config below is for old TLS versions. Specifically an incident with IE11 on
     # bank-admin.prisoner-money.service.justice.gov.uk. More info CP Incidents page.
