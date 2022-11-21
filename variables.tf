@@ -67,3 +67,7 @@ variable "enable_external_dns_annotation" {
   type        = bool
   default     = false
 }
+
+variable "dependence_certmanager" {
+  description = "cert-manager module dependences in order to be executed."
+}

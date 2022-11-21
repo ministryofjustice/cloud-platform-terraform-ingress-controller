@@ -11,7 +11,7 @@ locals {
 #############
 
 resource "kubernetes_namespace" "ingress_controllers" {
-  count = var.controller_name == "nginx" ? 1 : 0
+  count = var.controller_name == "default" ? 1 : 0
   metadata {
     name = "ingress-controllers"
 
@@ -50,12 +50,12 @@ resource "helm_release" "nginx_ingress" {
     replica_count                  = var.replica_count
     default_cert                   = var.default_cert
     controller_name                = var.controller_name
-    controller_value               = var.controller_name == "nginx" ? "k8s.io/ingress-nginx" : "k8s.io/ingress-${var.controller_name}"
+    controller_value               = "k8s.io/ingress-${var.controller_name}"
     enable_modsec                  = var.enable_modsec
     enable_latest_tls              = var.enable_latest_tls
     enable_owasp                   = var.enable_owasp
-    default                        = var.controller_name == "nginx" ? true : false
-    name_override                  = var.controller_name == "nginx" ? "ingress-nginx" : "ingress-${var.controller_name}"
+    default                        = var.controller_name == "default" ? true : false
+    name_override                  = "ingress-${var.controller_name}"
     enable_external_dns_annotation = var.enable_external_dns_annotation
     backend_repo                   = var.backend_repo
     backend_tag                    = var.backend_tag
@@ -63,7 +63,8 @@ resource "helm_release" "nginx_ingress" {
 
   depends_on = [
     kubernetes_namespace.ingress_controllers,
-    kubernetes_config_map.modsecurity_nginx_config
+    kubernetes_config_map.modsecurity_nginx_config,
+    var.dependence_certmanager
   ]
 
   lifecycle {
@@ -89,11 +90,12 @@ data "template_file" "nginx_ingress_default_certificate" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
-  count     = var.controller_name == "nginx" ? 1 : 0
+  count     = var.controller_name == "default" ? 1 : 0
   yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 
   depends_on = [
     kubernetes_namespace.ingress_controllers,
+    var.dependence_certmanager
   ]
 }
 
