@@ -14,16 +14,19 @@ See [example](example/) dir
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6.0 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >=1.13.2 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >=2.12.1 |
+| <a name="requirement_template"></a> [template](#requirement\_template) | >=2.2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider\_helm) | ~> 2.6.0 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | n/a |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >=1.13.2 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
+| <a name="provider_template"></a> [template](#provider\_template) | >=2.2.0 |
 
 ## Modules
 
