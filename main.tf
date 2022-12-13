@@ -118,6 +118,6 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
   ]
 
   lifecycle {
-    ignore_changes = [metadata.0.annotations]
+    ignore_changes = [metadata[0].annotations]
   }
 }
