@@ -130,9 +130,9 @@ controller:
       "ssl_session_id": "$ssl_session_id",
       "status": $status,
       "upstream_addr": "$upstream_addr",
-      "upstream_response_length": "$upstream_response_length",
-      "upstream_response_time": "$upstream_response_time",
-      "upstream_status": "$upstream_status"
+      "upstream_response_length": $upstream_response_length,
+      "upstream_response_time": $upstream_response_time,
+      "upstream_status": $upstream_status
       }
 
   publishService:
