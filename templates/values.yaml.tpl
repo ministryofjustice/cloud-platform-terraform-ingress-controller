@@ -4,9 +4,12 @@ controller:
     chroot: false
   replicaCount: ${replica_count}
 
+
 %{ if enable_modsec ~}
   extraVolumeMounts:
   ## Additional volumeMounts to the controller main container.
+    - name: logs-volume
+      mountPath: /var/log/
     - name: modsecurity-nginx-config
       mountPath: /etc/nginx/modsecurity/modsecurity.conf
       subPath: modsecurity.conf
@@ -14,6 +17,8 @@ controller:
 
   extraVolumes:
   ## Additional volumes to the controller pod.
+    - name: logs-volume
+      emptyDir: {}
     - name: modsecurity-nginx-config
       configMap:
         name: modsecurity-nginx-config
@@ -25,6 +30,16 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
+
+%{ if enable_modsec ~}
+  extraContainers:
+    - name: stdout-sidecar
+      image: bash
+      command: ["/bin/bash","-c","tail -f /var/log/**/*.log"]
+      volumeMounts:
+      - name: logs-volume
+        mountPath: /var/log/
+%{ endif ~}
 
   # -- Process Ingress objects without ingressClass annotation/ingressClassName field
   # Overrides value for --watch-ingress-without-class flag of the controller binary
