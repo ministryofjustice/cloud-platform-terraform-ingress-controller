@@ -59,6 +59,7 @@ resource "helm_release" "nginx_ingress" {
     enable_external_dns_annotation = var.enable_external_dns_annotation
     backend_repo                   = var.backend_repo
     backend_tag                    = var.backend_tag
+    fluent_bit_version             = var.fluent_bit_version
   })]
 
   depends_on = [
@@ -97,27 +98,4 @@ resource "kubectl_manifest" "nginx_ingress_default_certificate" {
     kubernetes_namespace.ingress_controllers,
     var.dependence_certmanager
   ]
-}
-
-resource "kubernetes_config_map" "modsecurity_nginx_config" {
-  count = var.enable_modsec ? 1 : 0
-
-  metadata {
-    name      = "modsecurity-nginx-config"
-    namespace = "ingress-controllers"
-    labels = {
-      "k8s-app" = var.controller_name
-    }
-  }
-  data = {
-    "modsecurity.conf" = file("${path.module}/templates/modsecurity.conf"),
-  }
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers,
-  ]
-
-  lifecycle {
-    ignore_changes = [metadata[0].annotations]
-  }
 }

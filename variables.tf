@@ -71,3 +71,21 @@ variable "enable_external_dns_annotation" {
 variable "dependence_certmanager" {
   description = "cert-manager module dependences in order to be executed."
 }
+
+variable "cluster" {
+  description = " cluster name used for opensearch indicies"
+  type        = string
+  default     = ""
+}
+
+variable "opensearch_modsec_audit_host" {
+  description = "domain endpoint for the opensearch cluster"
+  type        = string
+  default     = ""
+}
+
+variable "fluent_bit_version" {
+  description = "fluent bit container version used to exrtact modsec audit logs"
+  type        = string
+  default     = "2.1.8-amd64"
+}
