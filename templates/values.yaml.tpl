@@ -5,18 +5,29 @@ controller:
   replicaCount: ${replica_count}
 
 %{ if enable_modsec ~}
+  extraVolumes:
+  ## Additional volumes to the controller pod.
+    - name: logs-volume
+      emptyDir: {}
+    - name: modsecurity-nginx-config
+      configMap:
+        name: modsecurity-nginx-config
+    - name: fluent-bit-config
+      configMap:
+        name: fluent-bit-config
+    - name: fluent-bit-luascripts
+      configMap:
+        name: fluent-bit-luascripts
+
+
   extraVolumeMounts:
   ## Additional volumeMounts to the controller main container.
+    - name: logs-volume
+      mountPath: /var/log/audit/
     - name: modsecurity-nginx-config
       mountPath: /etc/nginx/modsecurity/modsecurity.conf
       subPath: modsecurity.conf
       readOnly: true
-
-  extraVolumes:
-  ## Additional volumes to the controller pod.
-    - name: modsecurity-nginx-config
-      configMap:
-        name: modsecurity-nginx-config
 %{ endif ~}
 
   updateStrategy:
@@ -25,6 +36,27 @@ controller:
     type: RollingUpdate
 
   minReadySeconds: 12
+
+%{ if enable_modsec ~}
+  extraInitContainers:
+    - name: init-file-permissions
+      image: busybox
+      command: ["sh", "-c", "chmod -R 777 /var/log/audit"]
+      volumeMounts:
+      - name: logs-volume
+        mountPath: /var/log/audit
+
+  extraContainers:
+    - name: flb-modsec-audit-logs
+      image: fluent/fluent-bit:${fluent_bit_version}
+      volumeMounts:
+      - name: fluent-bit-config
+        mountPath: /fluent-bit/etc/
+      - name: fluent-bit-luascripts
+        mountPath: /fluent-bit/scripts/
+      - name: logs-volume
+        mountPath: /var/log/audit/
+%{ endif ~}
 
   # -- Process Ingress objects without ingressClass annotation/ingressClassName field
   # Overrides value for --watch-ingress-without-class flag of the controller binary
