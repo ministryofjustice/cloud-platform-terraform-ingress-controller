@@ -1,13 +1,13 @@
 resource "kubernetes_service_account_v1" "restart_modsec_containers" {
   metadata {
-    name = "restart-modsec-containers"
+    name      = "restart-modsec-containers"
     namespace = "ingress-controllers"
   }
 }
 
 resource "kubernetes_role_v1" "restart_modsec_containers" {
   metadata {
-    name = "restart-modsec-containers"
+    name      = "restart-modsec-containers"
     namespace = "ingress-controllers"
   }
 
@@ -18,7 +18,7 @@ resource "kubernetes_role_v1" "restart_modsec_containers" {
   }
 }
 
-resource "kubernetes_role_binding_v1" "example" {
+resource "kubernetes_role_binding_v1" "restart_modsec_containers" {
   metadata {
     name      = "restart-modsec-containers"
     namespace = "ingress-controllers"
