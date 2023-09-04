@@ -18,7 +18,9 @@ controller:
     - name: fluent-bit-luascripts
       configMap:
         name: fluent-bit-luascripts
-
+    - name: logrotate-config
+      configMap:
+        name: logrotate-config
 
   extraVolumeMounts:
   ## Additional volumeMounts to the controller main container.
@@ -54,6 +56,26 @@ controller:
         mountPath: /fluent-bit/etc/
       - name: fluent-bit-luascripts
         mountPath: /fluent-bit/scripts/
+      - name: logs-volume
+        mountPath: /var/log/audit/
+    - name: logrotate
+      securityContext:
+        runAsGroup: 82
+      image: debian:bookworm-slim
+      command:
+        - sh
+        - -c
+        - |
+          apt update
+          apt install logrotate -y
+          groupadd -g 82 82
+          cp /home/logrotate.conf /etc/logrotate.conf
+          ln -s /etc/cron.daily/logrotate /etc/cron.hourly/logrotate
+          service cron start
+          sleep infinity 
+      volumeMounts:
+      - name: logrotate-config
+        mountPath: /home
       - name: logs-volume
         mountPath: /var/log/audit/
 %{ endif ~}

@@ -4,6 +4,12 @@
 
 Terraform module that deploys cloud-platform ingress controllers among another resources (like certificates)
 
+This module is also responsilbe for our WAF. It is provided by [modsec](https://github.com/SpiderLabs/ModSecurity). Although we have a cluster wide set of fluent-bit containers which collect and ship our logs to open search/ elastic search. We can't rely on that to collect modsec audit logs which are written to file. We need to write these logs to file because when we push them directly to stdout we lose logs. This is due to the scale of traffic in our live cluster. We increase log reliability by writing to file.
+
+This means we need to ship modsec audit logs separtely as the cluster level fluent-bit cannot access internal container files. So we introduced a fluent-bit side car which has the filesystem mounted and accessible. We have one further sidecar mounted to handle log rotation using [logrotate](https://linux.die.net/man/8/logrotate), this prevents our logs filling up our master node file space and causing node issues.
+
+![modsec audit logs diagram]("./images/modsec-audit-logs-diagram.png/" "modsec pod architecture")
+
 ## Usage
 
 See [example](example/) dir
