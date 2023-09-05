@@ -136,8 +136,8 @@ resource "kubernetes_config_map" "fluent_bit_lua_script" {
   data = {
     "cb_extract_tag_value.lua" = <<-EOT
     function cb_extract_tag_value(tag, timestamp, record)
-      local github_team = string.gmatch(record["log"], '%[tag "github_team=([%a+|%-]*)"%]')
-      local github_team_from_json = string.gmatch(record["log"], '"tags":%[.*"github_team=([%a+|%-]*)".*%]')
+      local github_team = string.gmatch(record["log"], '%[tag "github_team=([%w+|%-]*)"%]')
+      local github_team_from_json = string.gmatch(record["log"], '"tags":%[.*"github_team=([%w+|%-]*)".*%]')
 
       local new_record = record
       local team_matches = {}
@@ -199,3 +199,44 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
   }
 }
 
+
+resource "kubernetes_config_map" "logrotate_config" {
+  count = var.enable_modsec ? 1 : 0
+
+  metadata {
+    name      = "logrotate-config"
+    namespace = "ingress-controllers"
+    labels = {
+      "k8s-app" = var.controller_name
+    }
+  }
+  data = {
+    "logrotate.conf" = <<-EOT
+      /var/log/audit/**/**/* {
+          hourly
+          rotate 0
+          missingok
+          maxage 1
+      }
+
+      /var/log/audit/*.log {
+          su root 82
+          hourly
+          rotate 2
+          missingok
+          compress
+          delaycompress
+          copytruncate
+          maxage 1
+      }
+    EOT
+  }
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers,
+  ]
+
+  lifecycle {
+    ignore_changes = [metadata[0].annotations]
+  }
+}
