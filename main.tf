@@ -31,6 +31,9 @@ resource "kubernetes_namespace" "ingress_controllers" {
       "cloud-platform-out-of-hours-alert"                           = "true"
     }
   }
+  timeouts {
+    delete = "10m"
+  }
 }
 
 ########
