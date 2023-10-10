@@ -20,6 +20,7 @@ resource "kubernetes_namespace" "ingress_controllers" {
       "component"                                      = "ingress-controllers"
       "cloud-platform.justice.gov.uk/environment-name" = "production"
       "cloud-platform.justice.gov.uk/is-production"    = "true"
+      "pod-security.kubernetes.io/audit"               = "privileged"
     }
 
     annotations = {
