@@ -12,7 +12,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     "fluent-bit.conf" = <<-EOT
     [SERVICE]
         Flush                             1
-        Log_Level                         info
+        Log_Level                         debug
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
@@ -53,6 +53,47 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         DB.locking                        true
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
+
+    [INPUT]
+        Name                              tail
+        Alias                             modsec_nginx_ingress_stdout
+        Tag                               cp-ingress-modsec-stdout.*
+        Path                              /var/log/containers/*nginx-ingress-modsec-controller*_ingress-controllers_controller-*.log
+        Parser                            cri-containerd
+        Refresh_Interval                  5
+        Buffer_Max_Size                   5MB
+        Buffer_Chunk_Size                 1M
+        Offset_Key                        pause_position_modsec_stdout
+        DB                                cp-ingress-modsec-stdout.db
+        DB.locking                        true
+        Storage.type                      filesystem
+        Storage.pause_on_chunks_overlimit True
+
+    [FILTER]
+        Name                grep
+        Match               cp-ingress-modsec-stdout.*
+        regex               log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+
+    [FILTER]
+        Name                kubernetes
+        Alias               modsec_nginx_ingress_stdout
+        Match               cp-ingress-modsec-stdout.*
+        Kube_Tag_Prefix     cp-ingress-modsec-stdout.var.log.containers.
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+        Keep_Log            On
+        Merge_Log           On
+        Merge_Log_Key       log_processed
+        Buffer_Size         1MB
+
+    [FILTER]
+        Name                              lua
+        Match                             cp-ingress-modsec-stdout.*
+        script                            /fluent-bit/scripts/cb_extract_tag_value.lua
+        call                              cb_extract_tag_value
 
     [FILTER]
         Name                              lua
@@ -100,6 +141,14 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Format       json
         Time_Key     time
         Time_Keep    On
+    # CRI-containerd Parser
+    [PARSER]
+        # https://rubular.com/r/DjPmoX5HnQMesk
+        Name cri-containerd
+        Format regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
 
     [PARSER]
         Name         generic-json

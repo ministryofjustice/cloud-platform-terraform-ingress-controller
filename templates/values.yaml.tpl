@@ -21,6 +21,18 @@ controller:
     - name: logrotate-config
       configMap:
         name: logrotate-config
+    - hostPath:
+        path: /var/log
+        type: ""
+      name: varlog
+    - hostPath:
+        path: /var/lib/docker/containers
+        type: ""
+      name: varlibdockercontainers
+    - hostPath:
+        path: /etc/machine-id
+        type: File
+      name: etcmachineid
 
   extraVolumeMounts:
   ## Additional volumeMounts to the controller main container.
@@ -49,7 +61,9 @@ controller:
         mountPath: /var/log/audit
 
   extraContainers:
-    - name: flb-modsec-audit-logs
+    - name: flb-modsec-logs
+      securityContext:
+        runAsGroup: 0
       image: fluent/fluent-bit:${fluent_bit_version}
       volumeMounts:
       - name: fluent-bit-config
@@ -58,6 +72,14 @@ controller:
         mountPath: /fluent-bit/scripts/
       - name: logs-volume
         mountPath: /var/log/audit/
+      - mountPath: /var/log/
+        name: varlog
+      - mountPath: /var/lib/docker/containers
+        name: varlibdockercontainers
+        readOnly: true
+      - mountPath: /etc/machine-id
+        name: etcmachineid
+        readOnly: true
     - name: logrotate
       securityContext:
         runAsGroup: 82
@@ -74,6 +96,17 @@ controller:
           service cron start
           sleep infinity 
       volumeMounts:
+      - name: logs-volume
+        mountPath: /var/log/audit/
+      - mountPath: /var/log/
+        name: varlog
+      - mountPath: /var/lib/docker/containers
+        name: varlibdockercontainers
+        readOnly: true
+      - mountPath: /etc/machine-id
+        name: etcmachineid
+        readOnly: true
+
       - name: logrotate-config
         mountPath: /home
       - name: logs-volume
