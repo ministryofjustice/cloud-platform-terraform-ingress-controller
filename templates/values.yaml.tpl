@@ -98,14 +98,6 @@ controller:
       volumeMounts:
       - name: logs-volume
         mountPath: /var/log/audit/
-      - mountPath: /var/log/
-        name: varlog
-      - mountPath: /var/lib/docker/containers
-        name: varlibdockercontainers
-        readOnly: true
-      - mountPath: /etc/machine-id
-        name: etcmachineid
-        readOnly: true
 
       - name: logrotate-config
         mountPath: /home

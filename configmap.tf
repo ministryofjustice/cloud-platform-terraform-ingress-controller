@@ -12,7 +12,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     "fluent-bit.conf" = <<-EOT
     [SERVICE]
         Flush                             1
-        Log_Level                         debug
+        Log_Level                         info
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
@@ -23,21 +23,6 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Storage.path                      /var/log/flb-storage/
         Storage.max_chunks_up             64
         Storage.backlog.mem_limit         5MB
-
-    [INPUT]
-        Name                              tail
-        Alias                             modsec_nginx_ingress_audit_index
-        Tag                               cp-ingress-modsec-index-audit.*
-        Path                              /var/log/audit/*.log
-        Parser                            modsec-audit-log-index
-        Refresh_Interval                  5
-        Buffer_Max_Size                   5MB
-        Buffer_Chunk_Size                 1M
-        Offset_Key                        pause_position_modsec-audit-index
-        DB                                cp-ingress-modsec-audit-index.db
-        DB.locking                        true
-        Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
 
     [INPUT]
         Name                              tail
@@ -130,12 +115,6 @@ resource "kubernetes_config_map" "fluent-bit-config" {
       EOT
 
     "custom_parsers.conf" = <<-EOT
-    [PARSER]
-        Name modsec-audit-log-index
-        Format regex
-        Regex ^(?<url>[^ ]+) (?<client_ip>[^ ]+) (?<log>.*)$
-        Time_Key    time
-        Time_Format %d/%m/%Y:T%H:%M:%S.%z
     [PARSER]
         Name         initial-json
         Format       json
