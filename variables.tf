@@ -68,10 +68,6 @@ variable "enable_external_dns_annotation" {
   default     = false
 }
 
-variable "dependence_certmanager" {
-  description = "cert-manager module dependences in order to be executed."
-}
-
 variable "cluster" {
   description = " cluster name used for opensearch indicies"
   type        = string

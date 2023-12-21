@@ -6,7 +6,6 @@ module "ingress_controllers" {
   cluster_domain_name    = "dummy"
   is_live_cluster        = false
   live1_cert_dns_name    = "dummy"
-  dependence_certmanager = "ignore"
 
 }
 
@@ -20,7 +19,6 @@ module "modsec_ingress_controllers" {
   live1_cert_dns_name    = "dummy"
   enable_modsec          = true
   enable_owasp           = true
-  dependence_certmanager = "ignore"
 
   depends_on = [module.ingress_controllers]
 }

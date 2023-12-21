@@ -61,7 +61,6 @@ No modules.
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
 | <a name="input_controller_name"></a> [controller\_name](#input\_controller\_name) | Will be used as the ingress controller name and the class annotation | `string` | n/a | yes |
 | <a name="input_default_cert"></a> [default\_cert](#input\_default\_cert) | Useful if you want to use a default certificate for your ingress controller. Format: namespace/secretName | `string` | `"ingress-controllers/default-certificate"` | no |
-| <a name="input_dependence_certmanager"></a> [dependence\_certmanager](#input\_dependence\_certmanager) | cert-manager module dependences in order to be executed. | `any` | n/a | yes |
 | <a name="input_enable_external_dns_annotation"></a> [enable\_external\_dns\_annotation](#input\_enable\_external\_dns\_annotation) | Add external dns annotation for service | `bool` | `false` | no |
 | <a name="input_enable_latest_tls"></a> [enable\_latest\_tls](#input\_enable\_latest\_tls) | Provide support to tlsv1.3 along with tlsv1.2 | `bool` | `false` | no |
 | <a name="input_enable_modsec"></a> [enable\_modsec](#input\_enable\_modsec) | Enable https://github.com/SpiderLabs/ModSecurity-nginx | `bool` | `false` | no |
