@@ -96,10 +96,11 @@ controller:
           service cron start
           sleep infinity 
       volumeMounts:
-      - name: logs-volume
-        mountPath: /var/log/audit/
       - name: logrotate-config
         mountPath: /home
+      - name: logs-volume
+        mountPath: /var/log/audit/
+
 %{ endif ~}
 
   # -- Process Ingress objects without ingressClass annotation/ingressClassName field
