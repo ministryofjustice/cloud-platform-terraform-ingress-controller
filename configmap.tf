@@ -21,8 +21,8 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             64
-        Storage.backlog.mem_limit         5MB
+        Storage.max_chunks_up             128
+        Storage.backlog.mem_limit         100MB
 
     [INPUT]
         Name                              tail
@@ -72,7 +72,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Keep_Log            On
         Merge_Log           On
         Merge_Log_Key       log_processed
-        Buffer_Size         1MB
+        Buffer_Size         5MB
 
     [FILTER]
         Name                              lua
