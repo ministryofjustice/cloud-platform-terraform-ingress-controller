@@ -22,9 +22,13 @@ controller:
       configMap:
         name: logrotate-config
     - hostPath:
-        path: /var/log
+        path: /var/log/pods/
         type: ""
-      name: varlog
+      name: varlog-pods
+    - hostPath:
+        path: /var/log/containers/
+        type: ""
+      name: varlog-containers
     - hostPath:
         path: /var/lib/docker/containers
         type: ""
@@ -72,8 +76,10 @@ controller:
         mountPath: /fluent-bit/scripts/
       - name: logs-volume
         mountPath: /var/log/audit/
-      - mountPath: /var/log/
-        name: varlog
+      - name: varlog-pods
+        mountPath: /var/log/pods/
+      - name: varlog-containers
+        mountPath: /var/log/containers/
       - mountPath: /var/lib/docker/containers
         name: varlibdockercontainers
         readOnly: true
@@ -100,7 +106,10 @@ controller:
         mountPath: /home
       - name: logs-volume
         mountPath: /var/log/audit/
-
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "500Mi"
 %{ endif ~}
 
   # -- Process Ingress objects without ingressClass annotation/ingressClassName field
