@@ -69,7 +69,6 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [
     kubernetes_namespace.ingress_controllers,
     kubernetes_config_map.modsecurity_nginx_config,
-    var.dependence_certmanager
   ]
 
   lifecycle {
@@ -99,7 +98,6 @@ resource "kubectl_manifest" "nginx_ingress_default_certificate" {
   yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
 
   depends_on = [
-    kubernetes_namespace.ingress_controllers,
-    var.dependence_certmanager
+    kubernetes_namespace.ingress_controllers
   ]
 }
