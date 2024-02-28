@@ -146,7 +146,7 @@ controller:
 
   resources:
     limits:
-      memory: 8Gi
+      memory: 12Gi
     requests:
       memory: 512Mi
 
