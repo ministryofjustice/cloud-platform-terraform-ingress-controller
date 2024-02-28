@@ -1,0 +1,30 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ingress-controller-errors
+  namespace: ingress-controllers
+  labels:
+    prometheus: cloud-platform
+spec:
+  groups:
+  - name: ingress-controllers
+    rules:
+    - alert: IngressControllerIsCrashLoopBackoffing
+      expr: rate(kube_pod_container_status_restarts_total{job="kube-state-metrics",namespace="ingress-controllers"}[15m]) * 60 * 15 > 0
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        message: An Ingress Controller pod is CrashLoopBackOff'ing
+    - alert: IngressControllerIsOOMKilled
+      expr: |-
+        kube_pod_container_status_last_terminated_reason{container="controller",namespace="ingress-controllers",reason="OOMKilled"} == 1
+        and on(container, namespace, pod) increase(kube_pod_container_status_restarts_total{container="controller",namespace="ingress-controllers"}[5m]) > 0
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        message: |
+          An Ingress Controller pod has restarted because of OOMKilled. This alert works by watching for a pod that has been restarted within 5 minutes and the last termination status is OOMKilled.
+
