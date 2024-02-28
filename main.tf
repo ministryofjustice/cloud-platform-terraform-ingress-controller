@@ -101,3 +101,12 @@ resource "kubectl_manifest" "nginx_ingress_default_certificate" {
     kubernetes_namespace.ingress_controllers
   ]
 }
+
+#########################
+# prometheus rule alert #
+#########################
+resource "kubectl_manifest" "prometheus_rule_alert" {
+  count      = var.controller_name == "default" ? 1 : 0
+  depends_on = [helm_release.nginx_ingress]
+  yaml_body  = file("${path.module}/resources/alerts.yaml")
+}
