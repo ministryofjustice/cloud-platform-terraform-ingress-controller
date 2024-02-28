@@ -3,6 +3,7 @@ controller:
   image:
     chroot: false
   replicaCount: ${replica_count}
+  priorityClassName: system-cluster-critical
 
 %{ if enable_modsec ~}
   extraVolumes:
