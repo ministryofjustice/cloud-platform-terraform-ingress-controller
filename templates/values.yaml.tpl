@@ -2,8 +2,15 @@ nameOverride: ${name_override}
 controller:
   image:
     chroot: false
+    terminationGracePeriod: 600
   replicaCount: ${replica_count}
+  maxUnavailable: 1
   priorityClassName: system-cluster-critical
+  minReadySeconds: 10
+  lifecycle:
+    preStop:
+      exec:
+        command: ["/bin/sh", "-c", "sleep 30; /usr/local/openresty/nginx/sbin/nginx -c /etc/nginx/nginx.conf -s quit; while pgrep -x nginx; do sleep 1; done"]
 
 %{ if enable_modsec ~}
   extraVolumes:
@@ -152,6 +159,7 @@ controller:
       memory: 512Mi
 
   config:
+    worker-shutdown-timeout: "440s"
     enable-modsecurity: ${enable_modsec}
     enable-owasp-modsecurity-crs: ${enable_owasp}
     server-tokens: "false"
