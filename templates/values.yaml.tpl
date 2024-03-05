@@ -154,9 +154,9 @@ controller:
 
   resources:
     limits:
-      memory: 12Gi
+      memory: ${memory_limits}
     requests:
-      memory: 512Mi
+      memory: ${memory_requests}
 
   config:
     worker-shutdown-timeout: "440s"
