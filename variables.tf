@@ -68,6 +68,18 @@ variable "enable_external_dns_annotation" {
   default     = false
 }
 
+variable "memory_limits" {
+  description = "value for resources:limits memory value"
+  default     = "2Gi"
+  type        = string
+}
+
+variable "memory_requests" {
+  description = "value for resources:requests memory value"
+  default     = "512Mi"
+  type        = string
+}
+
 variable "cluster" {
   description = " cluster name used for opensearch indicies"
   type        = string
