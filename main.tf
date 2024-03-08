@@ -46,6 +46,7 @@ resource "helm_release" "nginx_ingress" {
   chart      = "ingress-nginx"
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
+  timeout    = 600
   version    = "4.7.3"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
@@ -60,8 +61,8 @@ resource "helm_release" "nginx_ingress" {
     enable_owasp                   = var.enable_owasp
     default                        = var.controller_name == "default" ? true : false
     name_override                  = "ingress-${var.controller_name}"
-    memory_requests         =  var.memory_requests
-    memory_limits            = var.memory_limits
+    memory_requests                = var.memory_requests
+    memory_limits                  = var.memory_limits
     enable_external_dns_annotation = var.enable_external_dns_annotation
     backend_repo                   = var.backend_repo
     backend_tag                    = var.backend_tag
