@@ -74,6 +74,7 @@ No modules.
 | <a name="input_memory_limits"></a> [memory\_limits](#input\_memory\_limits) | value for resources:limits memory value | `string` | `"2Gi"` | no |
 | <a name="input_memory_requests"></a> [memory\_requests](#input\_memory\_requests) | value for resources:requests memory value | `string` | `"512Mi"` | no |
 | <a name="input_opensearch_modsec_audit_host"></a> [opensearch\_modsec\_audit\_host](#input\_opensearch\_modsec\_audit\_host) | domain endpoint for the opensearch cluster | `string` | `""` | no |
+| <a name="input_proxy_response_buffering"></a> [proxy\_response\_buffering](#input\_proxy\_response\_buffering) | nginx receives a response from the proxied server as soon as possible, saving it into the buffers set by the proxy\_buffer\_size and proxy\_buffers directives. If the whole response does not fit into memory, a part of it can be saved to a temporary file on the disk. https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering | `string` | `"off"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas set in deployment | `string` | n/a | yes |
 
 ## Outputs
