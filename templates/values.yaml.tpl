@@ -168,6 +168,7 @@ controller:
     proxy-buffer-size: "16k"
     proxy-body-size: "50m"
     keepalive: ${keepalive}
+    proxy-buffering: ${proxy_response_buffering}
 
 %{ if enable_latest_tls }
     ssl-protocols: "TLSv1.2 TLSv1.3"

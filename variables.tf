@@ -71,9 +71,14 @@ variable "enable_external_dns_annotation" {
 variable "keepalive" {
   description = "the maximum number of idle keepalive connections to upstream servers that are preserved in the cache of each worker process. When this number is exceeded, the least recently used connections are closed. https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive"
   type        = number
-  default     = 0
+  default     = 320
 }
 
+variable "proxy_response_buffering" {
+  description = "nginx receives a response from the proxied server as soon as possible, saving it into the buffers set by the proxy_buffer_size and proxy_buffers directives. If the whole response does not fit into memory, a part of it can be saved to a temporary file on the disk. https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering"
+  type        = string
+  default     = "off"
+}
 
 variable "memory_limits" {
   description = "value for resources:limits memory value"
