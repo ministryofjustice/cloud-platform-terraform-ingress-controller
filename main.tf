@@ -59,6 +59,7 @@ resource "helm_release" "nginx_ingress" {
     enable_modsec                  = var.enable_modsec
     enable_latest_tls              = var.enable_latest_tls
     enable_owasp                   = var.enable_owasp
+    keepalive                      = var.keepalive
     default                        = var.controller_name == "default" ? true : false
     name_override                  = "ingress-${var.controller_name}"
     memory_requests                = var.memory_requests

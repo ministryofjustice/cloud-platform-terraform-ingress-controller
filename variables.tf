@@ -68,6 +68,13 @@ variable "enable_external_dns_annotation" {
   default     = false
 }
 
+variable "keepalive" {
+  description = "the maximum number of idle keepalive connections to upstream servers that are preserved in the cache of each worker process. When this number is exceeded, the least recently used connections are closed. https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive"
+  type        = number
+  default     = 0
+}
+
+
 variable "memory_limits" {
   description = "value for resources:limits memory value"
   default     = "2Gi"
