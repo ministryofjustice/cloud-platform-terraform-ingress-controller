@@ -167,6 +167,7 @@ controller:
     generate-request-id: "true"
     proxy-buffer-size: "16k"
     proxy-body-size: "50m"
+    keepalive: ${keepalive}
 
 %{ if enable_latest_tls }
     ssl-protocols: "TLSv1.2 TLSv1.3"
