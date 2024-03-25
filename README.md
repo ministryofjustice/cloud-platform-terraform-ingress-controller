@@ -76,6 +76,7 @@ No modules.
 | <a name="input_opensearch_modsec_audit_host"></a> [opensearch\_modsec\_audit\_host](#input\_opensearch\_modsec\_audit\_host) | domain endpoint for the opensearch cluster | `string` | `""` | no |
 | <a name="input_proxy_response_buffering"></a> [proxy\_response\_buffering](#input\_proxy\_response\_buffering) | nginx receives a response from the proxied server as soon as possible, saving it into the buffers set by the proxy\_buffer\_size and proxy\_buffers directives. If the whole response does not fit into memory, a part of it can be saved to a temporary file on the disk. https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering | `string` | `"off"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas set in deployment | `string` | n/a | yes |
+| <a name="input_upstream_keepalive_time"></a> [upstream\_keepalive\_time](#input\_upstream\_keepalive\_time) | Limits the maximum time during which requests can be processed through one keepalive connection. After this time is reached, the connection is closed following the subsequent request processing. | `string` | `"1h"` | no |
 
 ## Outputs
 
