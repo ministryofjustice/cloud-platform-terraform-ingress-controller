@@ -254,7 +254,7 @@ controller:
 %{~ endif ~}
 
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "${enable_cross_zone_lb}"
     externalTrafficPolicy: "Local"
 
 %{ if default_cert != "" }

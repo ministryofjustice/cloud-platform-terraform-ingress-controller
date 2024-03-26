@@ -61,7 +61,9 @@ resource "helm_release" "nginx_ingress" {
     enable_owasp            = var.enable_owasp
     keepalive               = var.keepalive
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#upstream-keepalive-time
-    upstream_keepalive_time        = var.upstream_keepalive_time
+    upstream_keepalive_time = var.upstream_keepalive_time
+    # https://docs.aws.amazon.com/elasticloadbalancing/latest/network/network-load-balancers.html#cross-zone-load-balancing
+    enable_cross_zone_lb           = var.enable_cross_zone_lb
     proxy_response_buffering       = var.proxy_response_buffering
     default                        = var.controller_name == "default" ? true : false
     name_override                  = "ingress-${var.controller_name}"
