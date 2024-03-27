@@ -80,6 +80,12 @@ variable "upstream_keepalive_time" {
   default     = "1h"
 }
 
+variable "enable_cross_zone_lb" {
+  description = "cross-zone load balancing distributes traffic across the registered targets in all enabled Availability Zones"
+  type        = bool
+  default     = true
+}
+
 variable "proxy_response_buffering" {
   description = "nginx receives a response from the proxied server as soon as possible, saving it into the buffers set by the proxy_buffer_size and proxy_buffers directives. If the whole response does not fit into memory, a part of it can be saved to a temporary file on the disk. https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering"
   type        = string
