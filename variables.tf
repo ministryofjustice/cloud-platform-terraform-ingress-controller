@@ -81,7 +81,7 @@ variable "upstream_keepalive_time" {
 }
 
 variable "enable_cross_zone_lb" {
-  description = "Limits the maximum time during which requests can be processed through one keepalive connection. After this time is reached, the connection is closed following the subsequent request processing."
+  description = "cross-zone load balancing distributes traffic across the registered targets in all enabled Availability Zones"
   type        = bool
   default     = true
 }
