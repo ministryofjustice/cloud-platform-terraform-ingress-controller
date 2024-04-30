@@ -25,7 +25,7 @@ variable "backend_repo" {
 
 variable "backend_tag" {
   description = "tag of the default backend app"
-  default     = "0.6"
+  default     = "1.1.2"
 }
 
 variable "replica_count" {
