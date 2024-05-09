@@ -117,7 +117,7 @@ variable "opensearch_modsec_audit_host" {
 }
 
 variable "fluent_bit_version" {
-  description = "fluent bit container version used to exrtact modsec audit logs"
+  description = "fluent bit container version used to extract modsec audit logs"
   type        = string
   default     = "3.0.2-amd64"
 }
