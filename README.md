@@ -14,7 +14,7 @@ This means we need to ship modsec audit logs separtely as the cluster level flue
 
 See [example](example/) dir
 
-<!--- BEGIN_TF_DOCS --->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -84,5 +84,4 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_helm_nginx_ingress_status"></a> [helm\_nginx\_ingress\_status](#output\_helm\_nginx\_ingress\_status) | n/a |
-
-<!--- END_TF_DOCS --->
+<!-- END_TF_DOCS -->
