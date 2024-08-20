@@ -47,7 +47,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.7.3"
+  version    = "4.11.2"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
@@ -86,7 +86,7 @@ resource "helm_release" "nginx_ingress" {
 }
 
 
-# Default Lets-Encrypt cert 
+# Default Lets-Encrypt cert
 data "template_file" "nginx_ingress_default_certificate" {
   template = file(
     "${path.module}/templates/default-certificate.yaml.tpl",
