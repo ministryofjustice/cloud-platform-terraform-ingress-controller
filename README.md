@@ -57,7 +57,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_backend_repo"></a> [backend\_repo](#input\_backend\_repo) | repository for the default backend app | `string` | `"ministryofjustice/cloud-platform-custom-error-pages"` | no |
-| <a name="input_backend_tag"></a> [backend\_tag](#input\_backend\_tag) | tag of the default backend app | `string` | `"1.1.4"` | no |
+| <a name="input_backend_tag"></a> [backend\_tag](#input\_backend\_tag) | tag of the default backend app | `string` | `"1.1.5"` | no |
 | <a name="input_cluster"></a> [cluster](#input\_cluster) | cluster name used for opensearch indicies | `string` | `""` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
 | <a name="input_controller_name"></a> [controller\_name](#input\_controller\_name) | Will be used as the ingress controller name and the class annotation | `string` | n/a | yes |
