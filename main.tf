@@ -50,29 +50,31 @@ resource "helm_release" "nginx_ingress" {
   version    = "4.7.3"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
-    metrics_namespace       = "ingress-controllers"
-    external_dns_annotation = local.external_dns_annotation
-    replica_count           = var.replica_count
-    default_cert            = var.default_cert
-    controller_name         = var.controller_name
-    controller_value        = "k8s.io/ingress-${var.controller_name}"
-    enable_modsec           = var.enable_modsec
-    enable_latest_tls       = var.enable_latest_tls
-    enable_owasp            = var.enable_owasp
-    keepalive               = var.keepalive
+    metrics_namespace         = "ingress-controllers"
+    external_dns_annotation   = local.external_dns_annotation
+    eip_allocation_annotation = var.eip_allocation_annotation
+    replica_count             = var.replica_count
+    default_cert              = var.default_cert
+    controller_name           = var.controller_name
+    controller_value          = "k8s.io/ingress-${var.controller_name}"
+    enable_modsec             = var.enable_modsec
+    enable_latest_tls         = var.enable_latest_tls
+    enable_owasp              = var.enable_owasp
+    keepalive                 = var.keepalive
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#upstream-keepalive-time
     upstream_keepalive_time = var.upstream_keepalive_time
     # https://docs.aws.amazon.com/elasticloadbalancing/latest/network/network-load-balancers.html#cross-zone-load-balancing
-    enable_cross_zone_lb           = var.enable_cross_zone_lb
-    proxy_response_buffering       = var.proxy_response_buffering
-    default                        = var.controller_name == "default" ? true : false
-    name_override                  = "ingress-${var.controller_name}"
-    memory_requests                = var.memory_requests
-    memory_limits                  = var.memory_limits
-    enable_external_dns_annotation = var.enable_external_dns_annotation
-    backend_repo                   = var.backend_repo
-    backend_tag                    = var.backend_tag
-    fluent_bit_version             = var.fluent_bit_version
+    enable_cross_zone_lb             = var.enable_cross_zone_lb
+    proxy_response_buffering         = var.proxy_response_buffering
+    default                          = var.controller_name == "default" ? true : false
+    name_override                    = "ingress-${var.controller_name}"
+    memory_requests                  = var.memory_requests
+    memory_limits                    = var.memory_limits
+    enable_external_dns_annotation   = var.enable_external_dns_annotation
+    enable_eip_allocation_annotation = var.enable_eip_allocation_annotation
+    backend_repo                     = var.backend_repo
+    backend_tag                      = var.backend_tag
+    fluent_bit_version               = var.fluent_bit_version
   })]
 
   depends_on = [
@@ -119,3 +121,18 @@ resource "kubectl_manifest" "prometheus_rule_alert" {
   depends_on = [helm_release.nginx_ingress]
   yaml_body  = file("${path.module}/resources/alerts.yaml")
 }
+
+
+#########################
+#        AWS EIP        #
+#########################
+# resource "aws_eip" "nlb_eip" {
+#   count = length(var.subnet_ids)  # Adjust this according to the number of subnets
+
+#   vpc = true
+
+#   tags = {
+#     Name = "NLB EIP ${count.index + 1}"
+#     Environment = var.environment  # Optional: Tagging for identification
+#   }
+# }

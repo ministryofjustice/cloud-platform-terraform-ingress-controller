@@ -68,6 +68,19 @@ variable "enable_external_dns_annotation" {
   default     = false
 }
 
+variable "enable_eip_allocation_annotation" {
+  description = "Attach EIP to NLB"
+  type        = bool
+  default     = false
+}
+
+variable "eip_allocation_annotation" {
+  description = "EIP Value"
+  type        = string
+  default     = ""
+}
+
+
 variable "keepalive" {
   description = "the maximum number of idle keepalive connections to upstream servers that are preserved in the cache of each worker process. When this number is exceeded, the least recently used connections are closed. https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive"
   type        = number
