@@ -258,6 +258,7 @@ controller:
       
 %{ if enable_eip_allocation_annotation }
       service.beta.kubernetes.io/aws-load-balancer-eip-allocations: "${eip_allocation_annotation}"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
 %{~ endif ~}
 
     externalTrafficPolicy: "Local"
