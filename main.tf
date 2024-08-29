@@ -3,7 +3,9 @@
 ##########
 
 locals {
-  external_dns_annotation = "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
+  external_dns_annotation   = "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
+  eip_allocation_ids        = aws_eip.nlb_eip.*.id  # Capture the list of EIP allocation IDs
+  eip_allocation_annotation = join(",", local.eip_allocation_ids)  # Create a comma-separated string of allocation IDs
 }
 
 #############
@@ -42,7 +44,7 @@ resource "kubernetes_namespace" "ingress_controllers" {
 ########
 
 resource "helm_release" "nginx_ingress" {
-  name       = "nginx-ingress-${var.controller_name}${var.suffix}"
+  name       = "nginx-ingress-${var.controller_name}${var.suffix}" # remove the suffix part after switch over
   chart      = "ingress-nginx"
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
@@ -52,7 +54,7 @@ resource "helm_release" "nginx_ingress" {
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace         = "ingress-controllers"
     external_dns_annotation   = local.external_dns_annotation
-    eip_allocation_annotation = var.eip_allocation_annotation
+    eip_allocation_annotation = local.eip_allocation_annotation
     replica_count             = var.replica_count
     default_cert              = var.default_cert
     controller_name           = var.controller_name
@@ -71,7 +73,6 @@ resource "helm_release" "nginx_ingress" {
     memory_requests                  = var.memory_requests
     memory_limits                    = var.memory_limits
     enable_external_dns_annotation   = var.enable_external_dns_annotation
-    enable_eip_allocation_annotation = var.enable_eip_allocation_annotation
     backend_repo                     = var.backend_repo
     backend_tag                      = var.backend_tag
     fluent_bit_version               = var.fluent_bit_version
@@ -80,6 +81,7 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [
     kubernetes_namespace.ingress_controllers,
     kubernetes_config_map.modsecurity_nginx_config,
+    aws_eip.nlb_eip
   ]
 
   lifecycle {
@@ -126,13 +128,12 @@ resource "kubectl_manifest" "prometheus_rule_alert" {
 #########################
 #        AWS EIP        #
 #########################
-# resource "aws_eip" "nlb_eip" {
-#   count = length(var.subnet_ids)  # Adjust this according to the number of subnets
+resource "aws_eip" "nlb_eip" {
+  count = length(var.azs)
 
-#   vpc = true
+  vdomain = VPC
 
-#   tags = {
-#     Name = "NLB EIP ${count.index + 1}"
-#     Environment = var.environment  # Optional: Tagging for identification
-#   }
-# }
+  tags = {
+    Name = "Name = format("${terraform.workspace}-%s","NLB-EIP",element(var.azs, count.index))"
+  }
+}

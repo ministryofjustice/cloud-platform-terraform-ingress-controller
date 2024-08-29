@@ -144,3 +144,9 @@ variable "fluent_bit_version" {
   type        = string
   default     = "3.0.2-amd64"
 }
+
+variable "azs" {
+  description = "A list of availability zones names or ids in the region"
+  type        = list(string)
+  default     = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
+}
