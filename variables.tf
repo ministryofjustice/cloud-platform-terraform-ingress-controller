@@ -86,6 +86,11 @@ variable "create_namespace" {
   default     = false
 }
 
+variable "suffix" {
+  type        = string
+  default     = ""
+}
+
 variable "keepalive" {
   description = "the maximum number of idle keepalive connections to upstream servers that are preserved in the cache of each worker process. When this number is exceeded, the least recently used connections are closed. https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive"
   type        = number
