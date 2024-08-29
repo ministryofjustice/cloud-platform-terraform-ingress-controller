@@ -42,7 +42,7 @@ resource "kubernetes_namespace" "ingress_controllers" {
 ########
 
 resource "helm_release" "nginx_ingress" {
-  name       = "nginx-ingress-${var.controller_name}-${var.suffix}"
+  name       = "nginx-ingress-${var.controller_name}${var.suffix}"
   chart      = "ingress-nginx"
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
