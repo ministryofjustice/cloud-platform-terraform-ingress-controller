@@ -131,7 +131,7 @@ resource "kubectl_manifest" "prometheus_rule_alert" {
 resource "aws_eip" "nlb_eip" {
   count = length(var.azs)
 
-  domain = VPC
+  domain = "vpc"
 
   tags = {
     "Name" = format("${terraform.workspace}-%s","NLB-EIP",element(var.azs, count.index))
