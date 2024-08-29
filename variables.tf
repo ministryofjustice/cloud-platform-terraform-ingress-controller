@@ -80,12 +80,6 @@ variable "eip_allocation_annotation" {
   default     = ""
 }
 
-variable "create_namespace" {
-  description = "Create ingress namespace"
-  type        = bool
-  default     = false
-}
-
 variable "suffix" {
   type        = string
   default     = ""

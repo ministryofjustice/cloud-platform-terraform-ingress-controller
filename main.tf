@@ -13,7 +13,7 @@ locals {
 #############
 
 resource "kubernetes_namespace" "ingress_controllers" {
-  count = var.controller_name == "default" && var.create_namespace ? 1 : 0
+  count = var.controller_name == "default" ? 1 : 0
   metadata {
     name = "ingress-controllers"
 
