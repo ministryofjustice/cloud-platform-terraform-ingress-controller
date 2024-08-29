@@ -134,6 +134,6 @@ resource "aws_eip" "nlb_eip" {
   domain = "vpc"
 
   tags = {
-    "Name" = format("${terraform.workspace}-%s","NLB-EIP",element(var.azs, count.index))
+    Name = format("%s-NLB-EIP-%s", terraform.workspace, element(var.azs, count.index))
   }
 }
