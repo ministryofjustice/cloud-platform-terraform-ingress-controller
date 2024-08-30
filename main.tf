@@ -4,8 +4,7 @@
 
 locals {
   external_dns_annotation   = "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
-  eip_allocation_ids        = aws_eip.nlb_eip.*.id  # Capture the list of EIP allocation IDs
-  eip_allocation_annotation = join(",", local.eip_allocation_ids)  # Create a comma-separated string of allocation IDs
+  eip_allocation_annotation = join(",", aws_eip.nlb_eip.*.id)
 }
 
 #############
