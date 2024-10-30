@@ -47,7 +47,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.7.3"
+  version    = "4.10.4"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
