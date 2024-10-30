@@ -1,5 +1,7 @@
 nameOverride: ${name_override}
 controller:
+## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
+  enableAnnotationValidations: false
   image:
     chroot: false
     terminationGracePeriod: 600
@@ -12,6 +14,12 @@ controller:
       exec:
         command: ["/bin/sh", "-c", "sleep 30; /usr/local/openresty/nginx/sbin/nginx -c /etc/nginx/nginx.conf -s quit; while pgrep -x nginx; do sleep 1; done"]
 
+  # -- This configuration defines if Ingress Controller should allow users to set
+  # their own *-snippet annotations, otherwise this is forbidden / dropped
+  # when users add those annotations.
+  # Global snippets in ConfigMap are still respected
+  allowSnippetAnnotations: true
+  
 %{ if enable_modsec ~}
   extraVolumes:
   ## Additional volumes to the controller pod.
