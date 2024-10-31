@@ -105,11 +105,12 @@ controller:
     - name: logrotate
       securityContext:
         runAsGroup: 82
-      image: debian:bookworm-slim
+      image: debian:bookworm-20241016-slim
       command:
         - sh
         - -c
         - |
+          export DEBIAN_FRONTEND=noninteractive
           apt update
           apt install logrotate -y
           groupadd -g 82 82
