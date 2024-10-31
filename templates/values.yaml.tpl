@@ -190,7 +190,7 @@ controller:
 %{ endif ~}
     server-snippet: |
       if ($scheme != 'https') {
-        return 308 https://$host$request_uri;
+        return 308 https://$server_name$request_uri;
       }
 
     #
