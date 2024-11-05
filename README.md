@@ -23,7 +23,6 @@ See [example](example/) dir
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6.0 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 2.0.4 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >=2.12.1 |
-| <a name="requirement_template"></a> [template](#requirement\_template) | >=2.2.0 |
 
 ## Providers
 
@@ -32,7 +31,6 @@ See [example](example/) dir
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 2.0.4 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
-| <a name="provider_template"></a> [template](#provider\_template) | >=2.2.0 |
 
 ## Modules
 
@@ -50,7 +48,6 @@ No modules.
 | [kubernetes_config_map.logrotate_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_config_map.modsecurity_nginx_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_namespace.ingress_controllers](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
-| [template_file.nginx_ingress_default_certificate](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
 ## Inputs
 
