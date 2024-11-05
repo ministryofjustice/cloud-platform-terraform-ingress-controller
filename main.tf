@@ -85,26 +85,16 @@ resource "helm_release" "nginx_ingress" {
   }
 }
 
-
-# Default Lets-Encrypt cert 
-data "template_file" "nginx_ingress_default_certificate" {
-  template = file(
-    "${path.module}/templates/default-certificate.yaml.tpl",
-  )
-
-  vars = {
+resource "kubectl_manifest" "nginx_ingress_default_certificate" {
+  count     = var.controller_name == "default" ? 1 : 0
+  yaml_body = templatefile("${path.module}/templates/default-certificate.yaml.tpl", {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
     namespace         = "ingress-controllers"
     alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
-  }
-}
-
-resource "kubectl_manifest" "nginx_ingress_default_certificate" {
-  count     = var.controller_name == "default" ? 1 : 0
-  yaml_body = data.template_file.nginx_ingress_default_certificate.rendered
+  })
 
   depends_on = [
     kubernetes_namespace.ingress_controllers
