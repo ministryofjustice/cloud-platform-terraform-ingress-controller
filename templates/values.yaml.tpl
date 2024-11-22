@@ -58,6 +58,8 @@ controller:
   ## Additional volumeMounts to the controller main container.
     - name: logs-volume
       mountPath: /var/log/audit/
+    - name: logs-debug-volume
+      mountPath: /var/log/debug/
     - name: modsecurity-nginx-config
       mountPath: /etc/nginx/modsecurity/modsecurity.conf
       subPath: modsecurity.conf
@@ -75,10 +77,12 @@ controller:
   extraInitContainers:
     - name: init-file-permissions
       image: busybox
-      command: ["sh", "-c", "chmod -R 777 /var/log/audit"]
+      command: ["sh", "-c", "chmod -R 777 /var/log/audit /var/log/debug"]
       volumeMounts:
       - name: logs-volume
         mountPath: /var/log/audit
+      - name: logs-debug-volume
+        mountPath: /var/log/debug
 
   extraContainers:
     - name: flb-modsec-logs
@@ -92,6 +96,8 @@ controller:
         mountPath: /fluent-bit/scripts/
       - name: logs-volume
         mountPath: /var/log/audit/
+      - name: logs-debug-volume
+        mountPath: /var/log/debug/
       - name: varlog-pods
         mountPath: /var/log/pods/
       - name: varlog-containers
@@ -123,6 +129,8 @@ controller:
         mountPath: /home
       - name: logs-volume
         mountPath: /var/log/audit/
+      - name: logs-debug-volume
+        mountPath: /var/log/debug/
       resources:
         requests:
           cpu: "100m"
