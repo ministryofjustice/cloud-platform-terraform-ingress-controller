@@ -41,6 +41,21 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [INPUT]
         Name                              tail
+        Alias                             modsec_nginx_ingress_debug
+        Tag                               cp-ingress-modsec-debug.*
+        Path                              /var/log/debug/**/**/*
+        Parser                            docker
+        Refresh_Interval                  5
+        Buffer_Max_Size                   5MB
+        Buffer_Chunk_Size                 1M
+        Offset_Key                        pause_position_modsec-debug
+        DB                                cp-ingress-modsec-debug.db
+        DB.locking                        true
+        Storage.type                      filesystem
+        Storage.pause_on_chunks_overlimit True
+
+    [INPUT]
+        Name                              tail
         Alias                             modsec_nginx_ingress_stdout
         Tag                               cp-ingress-modsec-stdout.*
         Path                              /var/log/containers/*nginx-ingress-modsec-controller*_ingress-controllers_controller-*.log
@@ -90,6 +105,20 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Name                              parser
         Parser                            generic-json
         Match                             cp-ingress-modsec-audit.*
+        Key_Name                          log
+        Reserve_Data                      On
+        Preserve_Key                      On
+
+    [FILTER]
+        Name                              lua
+        Match                             cp-ingress-modsec-debug.*
+        script                            /fluent-bit/scripts/cb_extract_tag_value.lua
+        call                              cb_extract_tag_value
+
+    [FILTER]
+        Name                              parser
+        Parser                            generic-json
+        Match                             cp-ingress-modsec-debug.*
         Key_Name                          log
         Reserve_Data                      On
         Preserve_Key                      On
@@ -248,6 +277,24 @@ resource "kubernetes_config_map" "logrotate_config" {
       }
 
       /var/log/audit/*.log {
+          su root 82
+          hourly
+          rotate 2
+          missingok
+          compress
+          delaycompress
+          copytruncate
+          maxage 1
+      }
+
+      /var/log/debug/**/**/* {
+          hourly
+          rotate 0
+          missingok
+          maxage 1
+      }
+
+      /var/log/debug/*.log {
           su root 82
           hourly
           rotate 2
