@@ -25,6 +25,8 @@ controller:
   ## Additional volumes to the controller pod.
     - name: logs-volume
       emptyDir: {}
+    - name: logs-debug-volume
+      emptyDir: {}
     - name: modsecurity-nginx-config
       configMap:
         name: modsecurity-nginx-config
