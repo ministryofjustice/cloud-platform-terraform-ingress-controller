@@ -43,7 +43,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Name                              tail
         Alias                             modsec_nginx_ingress_debug
         Tag                               cp-ingress-modsec-debug.*
-        Path                              /var/log/debug/**/**/*
+        Path                              /var/log/debug/debug.log
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
@@ -117,12 +117,50 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     [OUTPUT]
         Name                      opensearch
         Alias                     modsec_nginx_ingress_audit
-        Match                     *
+        Match                     cp-ingress-modsec-audit.*
         Host                      ${var.opensearch_modsec_audit_host}
         Port                      443
         Type                      _doc
         Time_Key                  @timestamp
         Logstash_Prefix           ${var.cluster}_k8s_modsec_ingress
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     modsec_nginx_ingress_stdout
+        Match                     cp-ingress-modsec-stdout.*
+        Host                      ${var.opensearch_modsec_audit_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${var.cluster}_k8s_modsec_ingress
+        tls                       On
+        Logstash_Format           On
+        Replace_Dots              On
+        Generate_ID               On
+        Retry_Limit               False
+        AWS_AUTH                  On
+        AWS_REGION                eu-west-2
+        Suppress_Type_Name        On
+        Buffer_Size               False
+
+    [OUTPUT]
+        Name                      opensearch
+        Alias                     modsec_nginx_ingress_debug
+        Match                     cp-ingress-modsec-debug.*
+        Host                      ${var.opensearch_modsec_audit_host}
+        Port                      443
+        Type                      _doc
+        Time_Key                  @timestamp
+        Logstash_Prefix           ${var.cluster}_k8s_modsec_ingress_debug
         tls                       On
         Logstash_Format           On
         Replace_Dots              On
