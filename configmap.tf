@@ -103,7 +103,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     [FILTER]
         Name                              lua
         Match                             cp-ingress-modsec-debug.*
-        script                            /fluent-bit/scripts/cb__tag_all_value.lua
+        script                            /fluent-bit/scripts/cb_tag_all_value.lua
         call                              cb_tag_all_value
 
     [FILTER]
