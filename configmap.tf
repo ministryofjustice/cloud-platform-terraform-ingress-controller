@@ -44,7 +44,6 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Alias                             modsec_nginx_ingress_debug
         Tag                               cp-ingress-modsec-debug.*
         Path                              /var/log/debug/**/**/*
-        Parser                            docker
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
         Buffer_Chunk_Size                 1M
@@ -102,23 +101,15 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         call                              cb_extract_tag_value
 
     [FILTER]
+        Name                              lua
+        Match                             cp-ingress-modsec-debug.*
+        script                            /fluent-bit/scripts/cb__tag_all_value.lua
+        call                              cb_tag_all_value
+
+    [FILTER]
         Name                              parser
         Parser                            generic-json
         Match                             cp-ingress-modsec-audit.*
-        Key_Name                          log
-        Reserve_Data                      On
-        Preserve_Key                      On
-
-    [FILTER]
-        Name                              lua
-        Match                             cp-ingress-modsec-debug.*
-        script                            /fluent-bit/scripts/cb_extract_tag_value.lua
-        call                              cb_extract_tag_value
-
-    [FILTER]
-        Name                              parser
-        Parser                            generic-json
-        Match                             cp-ingress-modsec-debug.*
         Key_Name                          log
         Reserve_Data                      On
         Preserve_Key                      On
@@ -191,6 +182,14 @@ resource "kubernetes_config_map" "fluent_bit_lua_script" {
     }
   }
   data = {
+    "cb_tag_all_value.lua"     = <<-EOT
+    function cb_tag_all_value(tag, timestamp, record)
+      local new_record = record
+
+      new_record["github_teams"] = "all-org-members"
+      return 1, timestamp, new_record
+    end
+    EOT
     "cb_extract_tag_value.lua" = <<-EOT
     function cb_extract_tag_value(tag, timestamp, record)
       local github_team = string.gmatch(record["log"], '%[tag "github_team=([%w+|%-]*)"%]')
