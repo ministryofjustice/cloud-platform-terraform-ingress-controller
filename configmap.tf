@@ -193,10 +193,10 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L%z
     [PARSER]
-        # https://rubular.com/r/DjPmoX5HnQMesk
+        # https://rubular.com/r/HSac4mikEZ3iF8
         Name modsec-debug-logs
         Format regex
-        Regex ^(?<debug_uid>\[\d+\.\d+\]) (?<uri>\[.*\]) (?<log>.*)$
+        Regex ^(?<debug_uid>\[\d+\.\d+\]) (?<uri>\[.*\]) (?<log>\[\d+\].*)$
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L%z
     [PARSER]
