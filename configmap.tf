@@ -89,6 +89,12 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Buffer_Size         5MB
 
     [FILTER]
+        Name                              parser
+        Parser                            modsec-debug-logs
+        Match                             cp-ingress-modsec-debug.*
+        Key_Name                          log
+
+    [FILTER]
         Name                              lua
         Match                             cp-ingress-modsec-stdout.*
         script                            /fluent-bit/scripts/cb_extract_tag_value.lua
@@ -186,7 +192,13 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-
+    [PARSER]
+        # https://rubular.com/r/DjPmoX5HnQMesk
+        Name modsec-debug-logs
+        Format regex
+        Regex ^(?<debug_uid>\[\d+\.\d+\]) (?<uri>\[.*\]) (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
     [PARSER]
         Name         generic-json
         Format       json
