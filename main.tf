@@ -47,7 +47,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.10.1"
+  version    = "4.11.3"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
@@ -86,7 +86,7 @@ resource "helm_release" "nginx_ingress" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
-  count     = var.controller_name == "default" ? 1 : 0
+  count = var.controller_name == "default" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/default-certificate.yaml.tpl", {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
