@@ -139,6 +139,21 @@ controller:
           memory: "500Mi"
 %{ endif ~}
 
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: "app.kubernetes.io/name"
+              operator: In
+              values:
+              - "ingress-default"
+              - "ingress-modsec"
+              - "ingress-production-only"
+          topologyKey: "kubernetes.io/hostname"
+          matchLabelKeys:
+          - pod-template-hash
+
   # -- Process Ingress objects without ingressClass annotation/ingressClassName field
   # Overrides value for --watch-ingress-without-class flag of the controller binary
   # Defaults to false
