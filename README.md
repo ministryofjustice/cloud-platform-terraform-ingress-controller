@@ -55,10 +55,11 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_backend_repo"></a> [backend\_repo](#input\_backend\_repo) | repository for the default backend app | `string` | `"ministryofjustice/cloud-platform-custom-error-pages"` | no |
 | <a name="input_backend_tag"></a> [backend\_tag](#input\_backend\_tag) | tag of the default backend app | `string` | `"1.1.5"` | no |
-| <a name="input_cluster"></a> [cluster](#input\_cluster) | cluster name used for opensearch indicies | `string` | `""` | no |
+| <a name="input_cluster"></a> [cluster](#input\_cluster) | cluster name used for opensearch indices | `string` | `""` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
 | <a name="input_controller_name"></a> [controller\_name](#input\_controller\_name) | Will be used as the ingress controller name and the class annotation | `string` | n/a | yes |
 | <a name="input_default_cert"></a> [default\_cert](#input\_default\_cert) | Useful if you want to use a default certificate for your ingress controller. Format: namespace/secretName | `string` | `"ingress-controllers/default-certificate"` | no |
+| <a name="input_enable_anti_affinity"></a> [enable\_anti\_affinity](#input\_enable\_anti\_affinity) | prevent controllers from being deployed to the same node, useful in live as controllers are extremely resource heavy | `bool` | `false` | no |
 | <a name="input_enable_cross_zone_lb"></a> [enable\_cross\_zone\_lb](#input\_enable\_cross\_zone\_lb) | cross-zone load balancing distributes traffic across the registered targets in all enabled Availability Zones | `bool` | `true` | no |
 | <a name="input_enable_external_dns_annotation"></a> [enable\_external\_dns\_annotation](#input\_enable\_external\_dns\_annotation) | Add external dns annotation for service | `bool` | `false` | no |
 | <a name="input_enable_latest_tls"></a> [enable\_latest\_tls](#input\_enable\_latest\_tls) | Provide support to tlsv1.3 along with tlsv1.2 | `bool` | `false` | no |
