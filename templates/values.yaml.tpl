@@ -139,6 +139,7 @@ controller:
           memory: "500Mi"
 %{ endif ~}
 
+%{ if enable_anti_affinity ~}
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -153,6 +154,7 @@ controller:
           topologyKey: "kubernetes.io/hostname"
           matchLabelKeys:
           - pod-template-hash
+%{ endif ~}
 
   # -- Process Ingress objects without ingressClass annotation/ingressClassName field
   # Overrides value for --watch-ingress-without-class flag of the controller binary

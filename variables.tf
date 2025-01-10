@@ -105,7 +105,7 @@ variable "memory_requests" {
 }
 
 variable "cluster" {
-  description = " cluster name used for opensearch indicies"
+  description = " cluster name used for opensearch indices"
   type        = string
   default     = ""
 }
@@ -120,4 +120,10 @@ variable "fluent_bit_version" {
   description = "fluent bit container version used to exrtact modsec audit logs"
   type        = string
   default     = "3.0.2-amd64"
+}
+
+variable "enable_anti_affinity" {
+  description = "prevent controllers from being deployed to the same node, useful in live as controllers are extremely resource heavy"
+  type        = bool
+  default     = false
 }

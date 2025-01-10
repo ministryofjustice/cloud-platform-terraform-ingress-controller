@@ -59,6 +59,7 @@ resource "helm_release" "nginx_ingress" {
     enable_modsec           = var.enable_modsec
     enable_latest_tls       = var.enable_latest_tls
     enable_owasp            = var.enable_owasp
+    enable_anti_affinity    = var.enable_anti_affinity
     keepalive               = var.keepalive
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#upstream-keepalive-time
     upstream_keepalive_time = var.upstream_keepalive_time
@@ -86,7 +87,7 @@ resource "helm_release" "nginx_ingress" {
 }
 
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
-  count     = var.controller_name == "default" ? 1 : 0
+  count = var.controller_name == "default" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/default-certificate.yaml.tpl", {
     apps_cluster_name = "*.apps.${var.cluster_domain_name}"
     cluster_name      = "*.${var.cluster_domain_name}"
