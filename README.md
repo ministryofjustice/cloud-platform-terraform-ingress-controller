@@ -21,7 +21,7 @@ See [example](example/) dir
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.5 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6.0 |
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 2.0.4 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 2.1.3 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >=2.12.1 |
 
 ## Providers
@@ -29,7 +29,7 @@ See [example](example/) dir
 | Name | Version |
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 2.0.4 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 2.1.3 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
 
 ## Modules
@@ -41,8 +41,8 @@ No modules.
 | Name | Type |
 |------|------|
 | [helm_release.nginx_ingress](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [kubectl_manifest.nginx_ingress_default_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.0.4/docs/resources/manifest) | resource |
-| [kubectl_manifest.prometheus_rule_alert](https://registry.terraform.io/providers/alekc/kubectl/2.0.4/docs/resources/manifest) | resource |
+| [kubectl_manifest.nginx_ingress_default_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
+| [kubectl_manifest.prometheus_rule_alert](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubernetes_config_map.fluent-bit-config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_config_map.fluent_bit_lua_script](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_config_map.logrotate_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
