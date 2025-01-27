@@ -328,6 +328,7 @@ defaultBackend:
   image:
     repository: "${backend_repo}"
     tag: "${backend_tag}"
+  priorityClassName: "system-cluster-critical"
 
 rbac:
   create: true
