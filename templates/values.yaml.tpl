@@ -206,6 +206,7 @@ controller:
     keepalive: ${keepalive}
     proxy-buffering: "${proxy_response_buffering}"
     upstream-keepalive-time: "${upstream_keepalive_time}"
+    annotations-risk-level: "Critical"
 
 %{ if enable_latest_tls }
     ssl-protocols: "TLSv1.2 TLSv1.3"
