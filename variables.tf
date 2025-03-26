@@ -127,3 +127,9 @@ variable "enable_anti_affinity" {
   type        = bool
   default     = false
 }
+
+variable "is_non_prod_modsec" {
+  description = "is non-prod modsec controller"
+  type        = bool
+  default     = false
+}
