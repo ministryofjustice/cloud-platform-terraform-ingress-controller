@@ -2,7 +2,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
   count = var.enable_modsec ? 1 : 0
 
   metadata {
-    name      = "fluent-bit-config"
+    name      = var.is_dev_only_modsec ? "fluent-bit-config-${var.controller_name}" : "fluent-bit-config"
     namespace = "ingress-controllers"
     labels = {
       "k8s-app" = var.controller_name
@@ -225,7 +225,7 @@ resource "kubernetes_config_map" "fluent_bit_lua_script" {
   count = var.enable_modsec ? 1 : 0
 
   metadata {
-    name      = "fluent-bit-luascripts"
+    name      = var.is_dev_only_modsec ? "fluent-bit-luascripts-${var.controller_name}" : "fluent-bit-luascripts"
     namespace = "ingress-controllers"
     labels = {
       "k8s-app" = var.controller_name
@@ -286,7 +286,8 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
   count = var.enable_modsec ? 1 : 0
 
   metadata {
-    name      = "modsecurity-nginx-config"
+
+    name      = var.is_dev_only_modsec ? "modsecurity-nginx-config-${var.controller_name}" : "modsecurity-nginx-config"
     namespace = "ingress-controllers"
     labels = {
       "k8s-app" = var.controller_name
@@ -310,7 +311,8 @@ resource "kubernetes_config_map" "logrotate_config" {
   count = var.enable_modsec ? 1 : 0
 
   metadata {
-    name      = "logrotate-config"
+
+    name      = var.is_dev_only_modsec ? "logrotate-config-${var.controller_name}" : "logrotate-config"
     namespace = "ingress-controllers"
     labels = {
       "k8s-app" = var.controller_name

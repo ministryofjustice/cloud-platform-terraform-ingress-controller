@@ -127,3 +127,9 @@ variable "enable_anti_affinity" {
   type        = bool
   default     = false
 }
+
+variable "is_dev_only_modsec" {
+  description = "is dev only modsec controller"
+  type        = bool
+  default     = false
+}
