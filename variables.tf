@@ -128,8 +128,8 @@ variable "enable_anti_affinity" {
   default     = false
 }
 
-variable "is_dev_only_modsec" {
-  description = "is dev only modsec controller"
+variable "is_non_prod_modsec" {
+  description = "is non-prod modsec controller"
   type        = bool
   default     = false
 }
