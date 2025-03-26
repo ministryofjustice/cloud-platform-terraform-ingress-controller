@@ -66,6 +66,7 @@ No modules.
 | <a name="input_enable_modsec"></a> [enable\_modsec](#input\_enable\_modsec) | Enable https://github.com/SpiderLabs/ModSecurity-nginx | `bool` | `false` | no |
 | <a name="input_enable_owasp"></a> [enable\_owasp](#input\_enable\_owasp) | Use default ruleset from https://github.com/SpiderLabs/owasp-modsecurity-crs/ | `bool` | `false` | no |
 | <a name="input_fluent_bit_version"></a> [fluent\_bit\_version](#input\_fluent\_bit\_version) | fluent bit container version used to exrtact modsec audit logs | `string` | `"3.0.2-amd64"` | no |
+| <a name="input_is_dev_only_modsec"></a> [is\_dev\_only\_modsec](#input\_is\_dev\_only\_modsec) | is dev only modsec controller | `bool` | `false` | no |
 | <a name="input_is_live_cluster"></a> [is\_live\_cluster](#input\_is\_live\_cluster) | For live clusters externalDNS annotation will have var.live\_domain (default *.cloud-platform.service.justice.gov.uk) | `bool` | `false` | no |
 | <a name="input_keepalive"></a> [keepalive](#input\_keepalive) | the maximum number of idle keepalive connections to upstream servers that are preserved in the cache of each worker process. When this number is exceeded, the least recently used connections are closed. https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive | `number` | `320` | no |
 | <a name="input_live1_cert_dns_name"></a> [live1\_cert\_dns\_name](#input\_live1\_cert\_dns\_name) | This is to add the live-1 dns name for eks-live cluster default certificate | `string` | `""` | no |
