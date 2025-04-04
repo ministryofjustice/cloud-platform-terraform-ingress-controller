@@ -29,7 +29,7 @@ controller:
       emptyDir: {}
     - name: modsecurity-nginx-config
       configMap:
-        name: modsecurity-nginx-config
+        name: ${modsec_nginx_cm_config_name}
     - name: fluent-bit-config
       configMap:
         name: fluent-bit-config

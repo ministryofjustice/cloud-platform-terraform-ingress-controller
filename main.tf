@@ -74,6 +74,7 @@ resource "helm_release" "nginx_ingress" {
     backend_repo                   = var.backend_repo
     backend_tag                    = var.backend_tag
     fluent_bit_version             = var.fluent_bit_version
+    modsec_nginx_cm_config_name    = var.is_non_prod_modsec ? "modsecurity-nginx-config-${var.controller_name}" : "modsecurity-nginx-config"
   })]
 
   depends_on = [
