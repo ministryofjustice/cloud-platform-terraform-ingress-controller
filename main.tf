@@ -4,6 +4,7 @@
 
 locals {
   external_dns_annotation = "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
+  tags = join(", ", [ for key, value in var.default_tags : "${key}=${value}" ])
 }
 
 #############
@@ -75,6 +76,7 @@ resource "helm_release" "nginx_ingress" {
     backend_tag                    = var.backend_tag
     fluent_bit_version             = var.fluent_bit_version
     modsec_nginx_cm_config_name    = var.is_non_prod_modsec ? "modsecurity-nginx-config-${var.controller_name}" : "modsecurity-nginx-config"
+    default_tags                   = local.tags
   })]
 
   depends_on = [

@@ -133,3 +133,8 @@ variable "is_non_prod_modsec" {
   type        = bool
   default     = false
 }
+
+variable "default_tags" {
+  description = "List of default_tags for resources"
+  type        = map(string)
+}
