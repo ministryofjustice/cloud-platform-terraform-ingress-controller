@@ -133,3 +133,13 @@ variable "is_non_prod_modsec" {
   type        = bool
   default     = false
 }
+
+variable "default_tags" {
+  description = "List of default_tags for resources"
+  type        = map(string)
+  default     = {
+    business-unit = "Platforms"
+    owner         = "Cloud Platform: platforms@digital.justice.gov.uk"
+    source-code   = "github.com/ministryofjustice/cloud-platform-terraform-ingress-controller"
+  }
+}

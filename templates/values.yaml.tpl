@@ -286,6 +286,7 @@ controller:
 
   service:
     annotations:
+      service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "${default_tags}"
 %{ if enable_external_dns_annotation }
       external-dns.alpha.kubernetes.io/hostname: "${external_dns_annotation}"
 %{~ endif ~}
