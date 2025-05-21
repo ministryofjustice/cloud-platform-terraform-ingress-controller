@@ -69,26 +69,46 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Storage.pause_on_chunks_overlimit True
 
     [FILTER]
-        Name                            rewrite_tag
-        Match                           cp-ingress-modsec-stdout
-        Rule                            $log !^(.*ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs.*)$ modsec-access-logs-stdout.$0 true
-        Emitter_Storage.type            filesystem
-        Emitter_Mem_Buf_Limit           20MB
+        Name                              rewrite_tag
+        Match                             cp-ingress-modsec-stdout
+        Rule                              $log ^(?!.*?Modsecurity|modsecurity|OWASP_CRS|owasp-modsecurity-crs).* modsec-access-logs-stdout.$0 true
+        Emitter_Storage.type              filesystem
+        Emitter_Mem_Buf_Limit             20MB
 
     [FILTER]
-        Name                            kubernetes
-        Alias                           modsec_nginx_ingress_stdout
-        Match                           modsec-access-logs-stdout.*
-        Kube_Tag_Prefix                 cp-ingress-modsec-stdout.var.log.containers.
-        Kube_URL                        https://kubernetes.default.svc:443
-        Kube_CA_File                    /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File                 /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser              On
-        K8S-Logging.Exclude             On
-        Keep_Log                        On
-        Merge_Log                       On
-        Merge_Log_Key                   log_processed
-        Buffer_Size                     5MB
+        Name                              kubernetes
+        Alias                             modsec_nginx_ingress_stdout
+        Match                             modsec-access-logs-stdout.*
+        Kube_Tag_Prefix                   cp-ingress-modsec-stdout.var.log.containers.
+        Kube_URL                          https://kubernetes.default.svc:443
+        Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser                On
+        K8S-Logging.Exclude               On
+        Keep_Log                          On
+        Merge_Log                         On
+        Merge_Log_Key                     log_processed
+        Buffer_Size                       5MB
+
+    [FILTER]
+        Name                              grep
+        Match                             cp-ingress-modsec-stdout.*
+        regex                             log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+
+    [FILTER]
+        Name                              kubernetes
+        Alias                             modsec_nginx_ingress_stdout
+        Match                             cp-ingress-modsec-stdout.*
+        Kube_Tag_Prefix                   cp-ingress-modsec-stdout.var.log.containers.
+        Kube_URL                          https://kubernetes.default.svc:443
+        Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
+        K8S-Logging.Parser                On
+        K8S-Logging.Exclude               On
+        Keep_Log                          On
+        Merge_Log                         On
+        Merge_Log_Key                     log_processed
+        Buffer_Size                       5MB
 
     [FILTER]
         Name                            grep
@@ -149,80 +169,80 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Preserve_Key                    On
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     modsec_nginx_ingress_audit
-        Match                     cp-ingress-modsec-audit.*
-        Host                      ${var.opensearch_modsec_audit_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${var.cluster}_k8s_modsec_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             modsec_nginx_ingress_audit
+        Match                             cp-ingress-modsec-audit.*
+        Host                              ${var.opensearch_modsec_audit_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Logstash_Prefix                   ${var.cluster}_k8s_modsec_ingress
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     modsec_access_logs_stdout
-        Match                     modsec-access-logs-stdout.*
-        Host                      ${var.opensearch_app_logs_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${var.cluster}_kubernetes_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             modsec_access_logs_stdout
+        Match                             modsec-access-logs-stdout.*
+        Host                              ${var.opensearch_app_logs_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Logstash_Prefix                   ${var.cluster}_kubernetes_ingress
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     modsec_nginx_ingress_stdout
-        Match                     cp-ingress-modsec-stdout.*
-        Host                      ${var.opensearch_modsec_audit_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${var.cluster}_k8s_modsec_ingress
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             modsec_nginx_ingress_stdout
+        Match                             cp-ingress-modsec-stdout.*
+        Host                              ${var.opensearch_modsec_audit_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Logstash_Prefix                   ${var.cluster}_k8s_modsec_ingress
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
 
     [OUTPUT]
-        Name                      opensearch
-        Alias                     modsec_nginx_ingress_debug
-        Match                     cp-ingress-modsec-debug.*
-        Host                      ${var.opensearch_modsec_audit_host}
-        Port                      443
-        Type                      _doc
-        Time_Key                  @timestamp
-        Logstash_Prefix           ${var.cluster}_k8s_modsec_ingress_debug
-        tls                       On
-        Logstash_Format           On
-        Replace_Dots              On
-        Generate_ID               On
-        Retry_Limit               False
-        AWS_AUTH                  On
-        AWS_REGION                eu-west-2
-        Suppress_Type_Name        On
-        Buffer_Size               False
+        Name                              opensearch
+        Alias                             modsec_nginx_ingress_debug
+        Match                             cp-ingress-modsec-debug.*
+        Host                              ${var.opensearch_modsec_audit_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Logstash_Prefix                   ${var.cluster}_k8s_modsec_ingress_debug
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
+        Retry_Limit                       False
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False
       EOT
 
     "custom_parsers.conf" = <<-EOT
