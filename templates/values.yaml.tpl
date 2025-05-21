@@ -32,7 +32,7 @@ controller:
         name: ${modsec_nginx_cm_config_name}
     - name: fluent-bit-config
       configMap:
-        name: fluent-bit-config
+        name: ${fluent_bit_config_name}
     - name: fluent-bit-luascripts
       configMap:
         name: fluent-bit-luascripts
