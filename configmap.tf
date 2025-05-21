@@ -70,10 +70,10 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [FILTER]
         Name                              rewrite_tag
-        Match                             cp-ingress-modsec-stdout
-        Rule                              $log ^(?!.*?Modsecurity|modsecurity|OWASP_CRS|owasp-modsecurity-crs).* modsec-access-logs-stdout.$0 true
+        Match                             cp-ingress-modsec-stdout.*
+        Rule                              $log ^(?!.*?(Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)).* modsec-access-logs-stdout.$0 true
         Emitter_Storage.type              filesystem
-        Emitter_Mem_Buf_Limit             20MB
+        Emitter_Mem_Buf_Limit             100MB
 
     [FILTER]
         Name                              kubernetes
@@ -93,7 +93,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     [FILTER]
         Name                              grep
         Match                             cp-ingress-modsec-stdout.*
-        regex                             log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+        regex                             log (Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
 
     [FILTER]
         Name                              kubernetes
