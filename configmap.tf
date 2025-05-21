@@ -111,26 +111,6 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Buffer_Size                       5MB
 
     [FILTER]
-        Name                            grep
-        Match                           cp-ingress-modsec-stdout.*
-        regex                           log (ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
-
-    [FILTER]
-        Name                            kubernetes
-        Alias                           modsec_nginx_ingress_stdout
-        Match                           cp-ingress-modsec-stdout.*
-        Kube_Tag_Prefix                 cp-ingress-modsec-stdout.var.log.containers.
-        Kube_URL                        https://kubernetes.default.svc:443
-        Kube_CA_File                    /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        Kube_Token_File                 /var/run/secrets/kubernetes.io/serviceaccount/token
-        K8S-Logging.Parser              On
-        K8S-Logging.Exclude             On
-        Keep_Log                        On
-        Merge_Log                       On
-        Merge_Log_Key                   log_processed
-        Buffer_Size                     5MB
-
-    [FILTER]
         Name                            parser
         Parser                          modsec-debug-logs
         Match                           cp-ingress-modsec-debug.*
