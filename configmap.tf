@@ -68,18 +68,19 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit True
 
+
     [FILTER]
         Name                              rewrite_tag
         Match                             cp-ingress-modsec-stdout.*
-        Rule                              $log ^(?!.*?(Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)).* modsec-access-logs-stdout.out true
+        Rule                              $log ^(?!.*?(Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)).* ingress-access.$TAG true
         Emitter_Storage.type              filesystem
         Emitter_Mem_Buf_Limit             100MB
 
     [FILTER]
         Name                              kubernetes
-        Alias                             modsec_nginx_ingress_stdout
-        Match                             modsec-access-logs-stdout.*
-        Kube_Tag_Prefix                   cp-ingress-modsec-stdout.var.log.containers.
+        Alias                             modsec_access_logs_stdout
+        Match                             ingress-access.*
+        Kube_Tag_Prefix                   ingress-access.cp-ingress-modsec-stdout.var.log.containers.
         Kube_URL                          https://kubernetes.default.svc:443
         Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -136,7 +137,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [FILTER]
         Name                            lua
-        Match                           modsec-access-logs-stdout.*
+        Match                           ingress-access.*
         script                          /fluent-bit/scripts/cb_tag_all_value.lua
         call                            cb_tag_all_value
 
@@ -170,7 +171,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     [OUTPUT]
         Name                              opensearch
         Alias                             modsec_access_logs_stdout
-        Match                             modsec-access-logs-stdout.*
+        Match                             ingress-access.*
         Host                              ${var.opensearch_app_logs_host}
         Port                              443
         Type                              _doc
