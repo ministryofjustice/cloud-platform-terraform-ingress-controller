@@ -71,16 +71,22 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [FILTER]
         Name                              rewrite_tag
-        Match                             cp-ingress-modsec-stdout.*
-        Rule                              $log ^(?!.*?(Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)).* ingress-access.$TAG true
+        Match                             ingress-modsec-stdout.*
+        Rule                              $log (Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs) nginx-modsec-error-log.$TAG true
         Emitter_Storage.type              filesystem
         Emitter_Mem_Buf_Limit             100MB
 
     [FILTER]
+        Name                              lua
+        Match                             nginx-modsec-error-log.*
+        script                            /fluent-bit/scripts/cb_extract_tag_value.lua
+        call                              cb_extract_tag_value
+
+    [FILTER]
         Name                              kubernetes
-        Alias                             modsec_access_logs_stdout
-        Match                             ingress-access.*
-        Kube_Tag_Prefix                   ingress-access.cp-ingress-modsec-stdout.var.log.containers.
+        Alias                             nginx-modsec-error-log
+        Match                             nginx-modsec-error-log.*
+        Kube_Tag_Prefix                   nginx-modsec-error-log.cp-ingress-modsec-stdout.var.log.containers.
         Kube_URL                          https://kubernetes.default.svc:443
         Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -93,14 +99,14 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [FILTER]
         Name                              grep
-        Match                             cp-ingress-modsec-stdout.*
-        regex                             log (Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)
+        Match                             ingress-modsec-stdout.*
+        regex                             log ^(?!.*?(Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs)).*
 
     [FILTER]
         Name                              kubernetes
-        Alias                             modsec_nginx_ingress_stdout
-        Match                             cp-ingress-modsec-stdout.*
-        Kube_Tag_Prefix                   cp-ingress-modsec-stdout.var.log.containers.
+        Alias                             modsec-nginx-ingress-stdout
+        Match                             ingress-modsec-stdout.*
+        Kube_Tag_Prefix                   ingress-modsec-stdout.var.log.containers.
         Kube_URL                          https://kubernetes.default.svc:443
         Kube_CA_File                      /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File                   /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -112,42 +118,34 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Buffer_Size                       5MB
 
     [FILTER]
-        Name                            parser
-        Parser                          modsec-debug-logs
-        Match                           cp-ingress-modsec-debug.*
-        Key_Name                        log
+        Name                              modify
+        Match                             ingress-modsec-stdout.*
+        Add                               github_teams all-org-members
 
     [FILTER]
-        Name                            lua
-        Match                           cp-ingress-modsec-stdout.*
-        script                          /fluent-bit/scripts/cb_extract_tag_value.lua
-        call                            cb_extract_tag_value
+        Name                              modify
+        Match                             cp-ingress-modsec-debug.*
+        Add                               github_teams all-org-members
 
     [FILTER]
-        Name                            lua
-        Match                           cp-ingress-modsec-audit.*
-        script                          /fluent-bit/scripts/cb_extract_tag_value.lua
-        call                            cb_extract_tag_value
+        Name                              parser
+        Parser                            modsec-debug-logs
+        Match                             cp-ingress-modsec-debug.*
+        Key_Name                          log
 
     [FILTER]
-        Name                            lua
-        Match                           cp-ingress-modsec-debug.*
-        script                          /fluent-bit/scripts/cb_tag_all_value.lua
-        call                            cb_tag_all_value
+        Name                              lua
+        Match                             cp-ingress-modsec-audit.*
+        script                            /fluent-bit/scripts/cb_extract_tag_value.lua
+        call                              cb_extract_tag_value
 
     [FILTER]
-        Name                            lua
-        Match                           ingress-access.*
-        script                          /fluent-bit/scripts/cb_tag_all_value.lua
-        call                            cb_tag_all_value
-
-    [FILTER]
-        Name                            parser
-        Parser                          generic-json
-        Match                           cp-ingress-modsec-audit.*
-        Key_Name                        log
-        Reserve_Data                    On
-        Preserve_Key                    On
+        Name                              parser
+        Parser                            generic-json
+        Match                             cp-ingress-modsec-audit.*
+        Key_Name                          log
+        Reserve_Data                      On
+        Preserve_Key                      On
 
     [OUTPUT]
         Name                              opensearch
@@ -170,8 +168,8 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [OUTPUT]
         Name                              opensearch
-        Alias                             modsec_access_logs_stdout
-        Match                             ingress-access.*
+        Alias                             ingress_modsec_stdout
+        Match                             ingress-modsec-stdout.*
         Host                              ${var.opensearch_app_logs_host}
         Port                              443
         Type                              _doc
@@ -189,8 +187,8 @@ resource "kubernetes_config_map" "fluent-bit-config" {
 
     [OUTPUT]
         Name                              opensearch
-        Alias                             modsec_nginx_ingress_stdout
-        Match                             cp-ingress-modsec-stdout.*
+        Alias                             modsec_ingress_error_log
+        Match                             nginx-modsec-error-log.*
         Host                              ${var.opensearch_modsec_audit_host}
         Port                              443
         Type                              _doc
@@ -280,14 +278,6 @@ resource "kubernetes_config_map" "fluent_bit_lua_script" {
     }
   }
   data = {
-    "cb_tag_all_value.lua"     = <<-EOT
-    function cb_tag_all_value(tag, timestamp, record)
-      local new_record = record
-
-      new_record["github_teams"] = "all-org-members"
-      return 1, timestamp, new_record
-    end
-    EOT
     "cb_extract_tag_value.lua" = <<-EOT
     function cb_extract_tag_value(tag, timestamp, record)
       local github_team = string.gmatch(record["log"], '%[tag "github_team=([%w+|%-]*)"%]')
