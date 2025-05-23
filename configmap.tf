@@ -56,7 +56,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     [INPUT]
         Name                              tail
         Alias                             modsec_nginx_ingress_stdout
-        Tag                               cp-ingress-modsec-stdout.*
+        Tag                               ingress-modsec-stdout.*
         Path                              /var/log/containers/*nginx-ingress-${var.controller_name}-controller*_ingress-controllers_controller-*.log
         Parser                            cri-containerd
         Refresh_Interval                  5
