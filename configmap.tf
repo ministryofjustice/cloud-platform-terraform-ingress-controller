@@ -72,9 +72,9 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     [FILTER]
         Name                              rewrite_tag
         Match                             ingress-modsec-stdout.*
-        Rule                              $log (Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs) nginx-modsec-error-log.$TAG true
+        Rule                              $log (Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs) nginx-modsec-error-log.$TAG false
         Emitter_Storage.type              filesystem
-        Emitter_Mem_Buf_Limit             100MB
+        Emitter_Mem_Buf_Limit             5MB
 
     [FILTER]
         Name                              lua
