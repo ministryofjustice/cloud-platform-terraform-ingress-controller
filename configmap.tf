@@ -21,8 +21,8 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             128
-        Storage.backlog.mem_limit         100MB
+        Storage.max_chunks_up             256
+        Storage.backlog.mem_limit         2GB
 
     [INPUT]
         Name                              tail
@@ -37,7 +37,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         DB                                cp-ingress-modsec-audit.db
         DB.locking                        true
         Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit Off
 
     [INPUT]
         Name                              tail
@@ -51,7 +51,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         DB                                cp-ingress-modsec-debug.db
         DB.locking                        true
         Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit Off
 
     [INPUT]
         Name                              tail
@@ -61,12 +61,12 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Parser                            cri-containerd
         Refresh_Interval                  5
         Buffer_Max_Size                   5MB
-        Buffer_Chunk_Size                 1M
+        Buffer_Chunk_Size                 2M
         Offset_Key                        pause_position_modsec_stdout
         DB                                cp-ingress-modsec-stdout.db
         DB.locking                        true
         Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit Off
 
 
     [FILTER]
