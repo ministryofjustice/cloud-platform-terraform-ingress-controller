@@ -149,8 +149,9 @@ controller:
               operator: In
               values:
               - "ingress-default"
+              - "ingress-default-non-prod"
               - "ingress-modsec"
-              - "ingress-production-only"
+              - "ingress-modsec-non-prod"
           topologyKey: "kubernetes.io/hostname"
           matchLabelKeys:
           - pod-template-hash
