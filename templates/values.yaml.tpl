@@ -1,7 +1,7 @@
 nameOverride: ${name_override}
 controller:
 ## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
-  enableAnnotationValidations: false
+  enableAnnotationValidations: true
   image:
     chroot: false
     terminationGracePeriod: 600
