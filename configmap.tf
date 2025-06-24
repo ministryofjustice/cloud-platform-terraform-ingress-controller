@@ -198,7 +198,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Logstash_Format                   On
         Replace_Dots                      On
         Generate_ID                       On
-        Retry_Limit                       False
+        Retry_Limit                       50
         AWS_AUTH                          On
         AWS_REGION                        eu-west-2
         Suppress_Type_Name                On
@@ -217,7 +217,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Logstash_Format                   On
         Replace_Dots                      On
         Generate_ID                       On
-        Retry_Limit                       False
+        Retry_Limit                       50
         AWS_AUTH                          On
         AWS_REGION                        eu-west-2
         Suppress_Type_Name                On
