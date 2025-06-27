@@ -60,13 +60,13 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Path                              /var/log/containers/*nginx-ingress-${var.controller_name}-controller*_ingress-controllers_controller-*.log
         Parser                            cri-containerd
         Refresh_Interval                  5
-        Buffer_Max_Size                   2MB
-        Buffer_Chunk_Size                 2MB
+        Buffer_Max_Size                   1MB
+        Buffer_Chunk_Size                 1MB
         Offset_Key                        pause_position_modsec_stdout
         DB                                cp-ingress-modsec-stdout.db
         DB.locking                        true
         Storage.type                      filesystem
-        Storage.pause_on_chunks_overlimit True
+        Storage.pause_on_chunks_overlimit False
 
 
     [FILTER]
