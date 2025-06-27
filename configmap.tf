@@ -60,8 +60,8 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Path                              /var/log/containers/*nginx-ingress-${var.controller_name}-controller*_ingress-controllers_controller-*.log
         Parser                            cri-containerd
         Refresh_Interval                  5
-        Buffer_Max_Size                   5MB
-        Buffer_Chunk_Size                 1M
+        Buffer_Max_Size                   2MB
+        Buffer_Chunk_Size                 2MB
         Offset_Key                        pause_position_modsec_stdout
         DB                                cp-ingress-modsec-stdout.db
         DB.locking                        true
@@ -74,7 +74,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         Match                             ingress-modsec-stdout.*
         Rule                              $log (Modsecurity|ModSecurity|ModSecurity-nginx|modsecurity|OWASP_CRS|owasp-modsecurity-crs) nginx-modsec-error-log.$TAG false
         Emitter_Storage.type              filesystem
-        Emitter_Mem_Buf_Limit             8000MB
+        Emitter_Mem_Buf_Limit             4000MB
 
     [FILTER]
         Name                              lua
