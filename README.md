@@ -28,13 +28,17 @@ See [example](example/) dir
 
 | Name | Version |
 |------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.6.0 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 2.1.3 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >=2.12.1 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_iam_assumable_role"></a> [iam\_assumable\_role](#module\_iam\_assumable\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.20.0 |
+| <a name="module_s3_bucket_modsec_logs"></a> [s3\_bucket\_modsec\_logs](#module\_s3\_bucket\_modsec\_logs) | github.com/ministryofjustice/cloud-platform-terraform-s3-bucket | 5.2.0 |
 
 ## Resources
 
@@ -48,13 +52,19 @@ No modules.
 | [kubernetes_config_map.logrotate_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_config_map.modsecurity_nginx_config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_namespace.ingress_controllers](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
+| [kubernetes_secret.s3_bucket_modsec_logs](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_eks_cluster.eks_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_application"></a> [application](#input\_application) | Application name | `string` | `""` | no |
 | <a name="input_backend_repo"></a> [backend\_repo](#input\_backend\_repo) | repository for the default backend app | `string` | `"ministryofjustice/cloud-platform-custom-error-pages"` | no |
 | <a name="input_backend_tag"></a> [backend\_tag](#input\_backend\_tag) | tag of the default backend app | `string` | `"1.1.5"` | no |
+| <a name="input_business_unit"></a> [business\_unit](#input\_business\_unit) | Area of the MOJ responsible for the service | `string` | `""` | no |
 | <a name="input_cluster"></a> [cluster](#input\_cluster) | cluster name used for opensearch indices | `string` | `""` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
 | <a name="input_controller_name"></a> [controller\_name](#input\_controller\_name) | Will be used as the ingress controller name and the class annotation | `string` | n/a | yes |
@@ -66,23 +76,31 @@ No modules.
 | <a name="input_enable_latest_tls"></a> [enable\_latest\_tls](#input\_enable\_latest\_tls) | Provide support to tlsv1.3 along with tlsv1.2 | `bool` | `false` | no |
 | <a name="input_enable_modsec"></a> [enable\_modsec](#input\_enable\_modsec) | Enable https://github.com/SpiderLabs/ModSecurity-nginx | `bool` | `false` | no |
 | <a name="input_enable_owasp"></a> [enable\_owasp](#input\_enable\_owasp) | Use default ruleset from https://github.com/SpiderLabs/owasp-modsecurity-crs/ | `bool` | `false` | no |
+| <a name="input_environment_name"></a> [environment\_name](#input\_environment\_name) | Environment name | `string` | `""` | no |
 | <a name="input_fluent_bit_version"></a> [fluent\_bit\_version](#input\_fluent\_bit\_version) | fluent bit container version used to exrtact modsec audit logs | `string` | `"3.0.2-amd64"` | no |
+| <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>) | `string` | `""` | no |
 | <a name="input_is_live_cluster"></a> [is\_live\_cluster](#input\_is\_live\_cluster) | For live clusters externalDNS annotation will have var.live\_domain (default *.cloud-platform.service.justice.gov.uk) | `bool` | `false` | no |
 | <a name="input_is_non_prod_modsec"></a> [is\_non\_prod\_modsec](#input\_is\_non\_prod\_modsec) | is non-prod modsec controller | `bool` | `false` | no |
+| <a name="input_is_production"></a> [is\_production](#input\_is\_production) | Whether this is used for production or not | `string` | `""` | no |
 | <a name="input_keepalive"></a> [keepalive](#input\_keepalive) | the maximum number of idle keepalive connections to upstream servers that are preserved in the cache of each worker process. When this number is exceeded, the least recently used connections are closed. https://nginx.org/en/docs/http/ngx_http_upstream_module.html#keepalive | `number` | `320` | no |
 | <a name="input_live1_cert_dns_name"></a> [live1\_cert\_dns\_name](#input\_live1\_cert\_dns\_name) | This is to add the live-1 dns name for eks-live cluster default certificate | `string` | `""` | no |
 | <a name="input_live_domain"></a> [live\_domain](#input\_live\_domain) | The live domain used for externalDNS annotation | `string` | `"cloud-platform.service.justice.gov.uk"` | no |
 | <a name="input_memory_limits"></a> [memory\_limits](#input\_memory\_limits) | value for resources:limits memory value | `string` | `"2Gi"` | no |
 | <a name="input_memory_requests"></a> [memory\_requests](#input\_memory\_requests) | value for resources:requests memory value | `string` | `"512Mi"` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace name | `string` | `"ingress-controllers"` | no |
 | <a name="input_opensearch_app_logs_host"></a> [opensearch\_app\_logs\_host](#input\_opensearch\_app\_logs\_host) | domain endpoint for the opensearch app logs cluster | `string` | `""` | no |
 | <a name="input_opensearch_modsec_audit_host"></a> [opensearch\_modsec\_audit\_host](#input\_opensearch\_modsec\_audit\_host) | domain endpoint for the opensearch modsec audit cluster | `string` | `""` | no |
 | <a name="input_proxy_response_buffering"></a> [proxy\_response\_buffering](#input\_proxy\_response\_buffering) | nginx receives a response from the proxied server as soon as possible, saving it into the buffers set by the proxy\_buffer\_size and proxy\_buffers directives. If the whole response does not fit into memory, a part of it can be saved to a temporary file on the disk. https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering | `string` | `"off"` | no |
 | <a name="input_replica_count"></a> [replica\_count](#input\_replica\_count) | Number of replicas set in deployment | `string` | n/a | yes |
+| <a name="input_team_name"></a> [team\_name](#input\_team\_name) | Team name | `string` | `""` | no |
 | <a name="input_upstream_keepalive_time"></a> [upstream\_keepalive\_time](#input\_upstream\_keepalive\_time) | Limits the maximum time during which requests can be processed through one keepalive connection. After this time is reached, the connection is closed following the subsequent request processing. | `string` | `"1h"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_fluent_bit_modsec_irsa_arn"></a> [fluent\_bit\_modsec\_irsa\_arn](#output\_fluent\_bit\_modsec\_irsa\_arn) | IAM Role ARN for Fluent Bit IRSA |
 | <a name="output_helm_nginx_ingress_status"></a> [helm\_nginx\_ingress\_status](#output\_helm\_nginx\_ingress\_status) | n/a |
+| <a name="output_s3_bucket_modsec_logs_arn"></a> [s3\_bucket\_modsec\_logs\_arn](#output\_s3\_bucket\_modsec\_logs\_arn) | S3 bucket ARN for modsec logs |
+| <a name="output_s3_bucket_modsec_logs_name"></a> [s3\_bucket\_modsec\_logs\_name](#output\_s3\_bucket\_modsec\_logs\_name) | S3 bucket name for modsec logs |
 <!-- END_TF_DOCS -->
