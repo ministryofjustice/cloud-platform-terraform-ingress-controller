@@ -77,7 +77,7 @@ resource "helm_release" "nginx_ingress" {
     fluent_bit_version             = var.fluent_bit_version
     modsec_nginx_cm_config_name    = var.is_non_prod_modsec ? "modsecurity-nginx-config-${var.controller_name}" : "modsecurity-nginx-config"
     fluent_bit_config_name         = var.is_non_prod_modsec ? "fluent-bit-config-modsec-non-prod" : "fluent-bit-config"
-    fluent_bit_irsa_arn            = module.iam_assumable_role[0].iam_role_arn
+    fluent_bit_irsa_arn            = var.enable_modsec ? module.iam_assumable_role[0].iam_role_arn : null
     default_tags                   = local.tags
   })]
 

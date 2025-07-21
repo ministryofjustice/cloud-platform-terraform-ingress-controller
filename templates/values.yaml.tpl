@@ -341,4 +341,6 @@ serviceAccount:
   name: ""
   automountServiceAccountToken: true
   annotations:
-    eks.amazonaws.com/role-arn: ${fluent_bit_irsa_arn} 
+%{ if enable_modsec }  
+    eks.amazonaws.com/role-arn: ${fluent_bit_irsa_arn}
+%{~ endif ~}
