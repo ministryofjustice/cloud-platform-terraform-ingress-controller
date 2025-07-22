@@ -15,5 +15,5 @@ output "s3_bucket_modsec_logs_arn" {
 
 output "fluent_bit_modsec_irsa_arn" {
   description = "IAM Role ARN for Fluent Bit IRSA"
-  value       = var.enable_modsec ? module.iam_assumable_role[0].iam_role_arn : null
+  value       = var.enable_modsec ? resource.aws_iam_role.modsec_fluentbit_irsa[0].arn : null
 }
