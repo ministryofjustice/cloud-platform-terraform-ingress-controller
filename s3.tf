@@ -62,23 +62,38 @@ data "aws_eks_cluster" "eks_cluster" {
 }
 
 # Create assumable role #
-module "iam_assumable_role" {
-  count   = var.enable_modsec ? 1 : 0
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.20.0"
+data "aws_iam_policy_document" "modsec_fluentbit_irsa_trust_policy" {
+  statement {
+      effect  = "Allow"
+      actions = ["sts:AssumeRoleWithWebIdentity"]
 
-  allow_self_assume_role     = false
-  assume_role_condition_test = "StringEquals"
-  create_role                = true
-  force_detach_policies      = true
-  role_name                  = "cloud-platform-${var.controller_name}-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
-  role_policy_arns           = {
-    s3 = module.s3_bucket_modsec_logs[0].irsa_policy_arn
-  }
-  oidc_providers = {
-    (data.aws_eks_cluster.eks_cluster.name) : {
-      provider_arn               = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"
-      namespace_service_accounts = ["ingress-controllers:nginx-ingress-${var.controller_name}"]
+      condition {
+        test     = "StringEquals"
+        variable = "${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub"
+        values   = ["system:serviceaccount:ingress-controllers:nginx-ingress-${var.controller_name}"]
+      }
+
+      condition {
+        test     = "StringEquals"
+        variable = "${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:aud"
+        values   = ["sts.amazonaws.com"]
+      }
+
+      principals {
+        type        = "Federated"
+        identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"]
+      }
     }
-  }
-}    
+}
+
+resource "aws_iam_role" "modsec_fluentbit_irsa" {
+  count               = var.enable_modsec ? 1 : 0
+  name                = "cloud-platform-${var.controller_name}-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
+  assume_role_policy  = data.aws_iam_policy_document.modsec_fluentbit_irsa_trust_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "modsec_fluentbit_irsa_s3" {
+  count      = var.enable_modsec ? 1 : 0
+  role       = aws_iam_role.modsec_fluentbit_irsa[0].name
+  policy_arn = module.s3_bucket_modsec_logs[0].irsa_policy_arn
+}
