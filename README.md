@@ -37,13 +37,14 @@ See [example](example/) dir
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_iam_assumable_role"></a> [iam\_assumable\_role](#module\_iam\_assumable\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.20.0 |
 | <a name="module_s3_bucket_modsec_logs"></a> [s3\_bucket\_modsec\_logs](#module\_s3\_bucket\_modsec\_logs) | github.com/ministryofjustice/cloud-platform-terraform-s3-bucket | 5.2.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_iam_role.modsec_fluentbit_irsa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.modsec_fluentbit_irsa_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [helm_release.nginx_ingress](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubectl_manifest.nginx_ingress_default_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubectl_manifest.prometheus_rule_alert](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
@@ -55,6 +56,7 @@ See [example](example/) dir
 | [kubernetes_secret.s3_bucket_modsec_logs](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_eks_cluster.eks_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
+| [aws_iam_policy_document.modsec_fluentbit_irsa_trust_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 
 ## Inputs
