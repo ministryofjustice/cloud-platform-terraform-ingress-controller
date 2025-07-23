@@ -335,3 +335,11 @@ defaultBackend:
 
 rbac:
   create: true
+%{ if enable_modsec }   
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: true  
+  annotations: 
+    eks.amazonaws.com/role-arn: ${fluent_bit_irsa_arn}
+%{~ endif ~}
