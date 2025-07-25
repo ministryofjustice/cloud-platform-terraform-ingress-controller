@@ -12,7 +12,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     "fluent-bit.conf" = <<-EOT
     [SERVICE]
         Flush                             1
-        Log_Level                         info
+        Log_Level                         debug
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
@@ -67,6 +67,21 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         DB.locking                        true
         Storage.type                      filesystem
         Storage.pause_on_chunks_overlimit False
+
+    [INPUT]
+        Name                              tail
+        Alias                             flb_modsec_logs
+        Tag                               flb-modsec-logs.*
+        Path                              /var/log/containers/*nginx-ingress-${var.controller_name}-controller*_ingress-controllers_flb-modsec-logs-*.log
+        Parser                            cri-containerd
+        Refresh_Interval                  5
+        Buffer_Max_Size                   5MB
+        Buffer_Chunk_Size                 1M
+        Offset_Key                        pause_position_flb_modsec_logs
+        DB                                cp-flb-modsec-logs.db
+        DB.locking                        true
+        Storage.type                      filesystem
+        Storage.pause_on_chunks_overlimit True
 
 
     [FILTER]
@@ -206,35 +221,26 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         AWS_AUTH                          On
         AWS_REGION                        eu-west-2
         Suppress_Type_Name                On
-        Buffer_Size                       False
+        Buffer_Size                       False  
 
     [OUTPUT]
-        Name                              s3
-        Alias                             modsec_nginx_ingress_audit_s3
-        Match                             cp-ingress-modsec-audit.*
-        bucket                            ${module.s3_bucket_modsec_logs[0].bucket_name}
-        region                            eu-west-2
-        total_file_size                   5M
-        upload_timeout                    10m
-        store_dir                         /tmp/fluent-bit/s3
-        store_dir_limit_size              1G
-        s3_key_format                     /logs/audit/%Y/%m/%d/%H/%M/%S-$UUID
-        use_put_object                    true
+        Name                              opensearch
+        Alias                             flb_modsec_logs_os
+        Match                             flb-modsec-logs.*
+        Host                              ${var.opensearch_app_logs_host}
+        Port                              443
+        Type                              _doc
+        Time_Key                          @timestamp
+        Logstash_Prefix                   ${var.cluster}_kubernetes_cluster
+        tls                               On
+        Logstash_Format                   On
+        Replace_Dots                      On
+        Generate_ID                       On
         Retry_Limit                       False
-
-    [OUTPUT]
-        Name                              s3
-        Alias                             modsec_nginx_ingress_stdout_s3
-        Match                             ingress-modsec-stdout.*
-        bucket                            ${module.s3_bucket_modsec_logs[0].bucket_name}
-        region                            eu-west-2
-        total_file_size                   5M
-        upload_timeout                    10m
-        store_dir                         /tmp/fluent-bit/s3
-        store_dir_limit_size              1G
-        s3_key_format                     /logs/stdout/%Y/%m/%d/%H/%M/%S-$UUID
-        use_put_object                    true
-        Retry_Limit                       False           
+        AWS_AUTH                          On
+        AWS_REGION                        eu-west-2
+        Suppress_Type_Name                On
+        Buffer_Size                       False        
       EOT
 
     "custom_parsers.conf" = <<-EOT
