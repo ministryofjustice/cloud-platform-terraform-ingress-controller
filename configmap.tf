@@ -249,7 +249,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         bucket                            ${module.s3_bucket_modsec_logs[0].bucket_name}
         region                            eu-west-2
         total_file_size                   5M
-        upload_timeout                    10m
+        upload_timeout                    1m
         store_dir                         /tmp/fluent-bit/s3
         store_dir_limit_size              1G
         s3_key_format                     /logs/audit/%Y/%m/%d/%H/%M/%S-$UUID
@@ -263,7 +263,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         bucket                            ${module.s3_bucket_modsec_logs[0].bucket_name}
         region                            eu-west-2
         total_file_size                   5M
-        upload_timeout                    10m
+        upload_timeout                    1m
         store_dir                         /tmp/fluent-bit/s3
         store_dir_limit_size              1G
         s3_key_format                     /logs/stdout/%Y/%m/%d/%H/%M/%S-$UUID
