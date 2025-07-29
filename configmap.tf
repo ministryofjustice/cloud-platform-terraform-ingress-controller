@@ -255,6 +255,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         s3_key_format                     /logs/audit/%Y/%m/%d/%H/%M/%S-$UUID
         use_put_object                    true
         Retry_Limit                       False
+
     [OUTPUT]
         Name                              s3
         Alias                             modsec_nginx_ingress_stdout_s3
