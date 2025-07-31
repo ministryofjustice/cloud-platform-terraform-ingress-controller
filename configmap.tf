@@ -21,7 +21,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         HTTP_Listen                       0.0.0.0
         HTTP_Port                         2020
         Storage.path                      /var/log/flb-storage/
-        Storage.max_chunks_up             128
+        Storage.max_chunks_up             256
         Storage.backlog.mem_limit         100MB
 
     [INPUT]
