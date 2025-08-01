@@ -251,7 +251,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         total_file_size                   5M
         upload_timeout                    1m
         store_dir                         /tmp/fluent-bit/s3-audit
-        store_dir_limit_size              1G
+        store_dir_limit_size              3G
         s3_key_format                     /logs/audit/%Y/%m/%d/%H/%M/%S-$UUID
         use_put_object                    true
         Retry_Limit                       False
@@ -265,7 +265,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         total_file_size                   5M
         upload_timeout                    1m
         store_dir                         /tmp/fluent-bit/s3-stdout
-        store_dir_limit_size              1G
+        store_dir_limit_size              3G
         s3_key_format                     /logs/stdout/%Y/%m/%d/%H/%M/%S-$UUID
         use_put_object                    true
         Retry_Limit                       False          
