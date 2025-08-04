@@ -12,7 +12,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
     "fluent-bit.conf" = <<-EOT
     [SERVICE]
         Flush                             1
-        Log_Level                         debug
+        Log_Level                         info
         Daemon                            Off
         Grace                             30
         Parsers_File                      parsers.conf
