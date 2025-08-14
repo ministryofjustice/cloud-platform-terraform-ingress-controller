@@ -241,20 +241,6 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         AWS_REGION                        eu-west-2
         Suppress_Type_Name                On
         Buffer_Size                       False           
-
-    [OUTPUT]
-        Name                              s3
-        Alias                             modsec_nginx_ingress_stdout_s3
-        Match                             ingress-modsec-stdout.*
-        bucket                            ${module.s3_bucket_modsec_logs[0].bucket_name}
-        region                            eu-west-2
-        total_file_size                   1M
-        upload_timeout                    1m
-        store_dir                         /tmp/fluent-bit/s3-stdout
-        store_dir_limit_size              3G
-        s3_key_format                     /logs/stdout/%Y/%m/%d/%H/%M/%S-$UUID
-        use_put_object                    true
-        Retry_Limit                       False                
       EOT
 
     "custom_parsers.conf" = <<-EOT
