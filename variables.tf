@@ -194,3 +194,9 @@ variable "infrastructure_support" {
   type        = string
   default     = ""
 }
+
+variable "internal_load_balancer" {
+  description = "Whether to configure load balancer as internal"
+  type        = bool
+  default     = false
+}
