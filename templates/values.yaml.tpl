@@ -294,6 +294,10 @@ controller:
 
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "${enable_cross_zone_lb}"
+%{ if internal_load_balancer }
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+%{~ endif ~}
+
     externalTrafficPolicy: "Local"
 
 %{ if default_cert != "" }
