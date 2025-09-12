@@ -81,6 +81,7 @@ See [example](example/) dir
 | <a name="input_environment_name"></a> [environment\_name](#input\_environment\_name) | Environment name | `string` | `""` | no |
 | <a name="input_fluent_bit_version"></a> [fluent\_bit\_version](#input\_fluent\_bit\_version) | fluent bit container version used to exrtact modsec audit logs | `string` | `"3.0.2-amd64"` | no |
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>) | `string` | `""` | no |
+| <a name="input_internal_load_balancer"></a> [internal\_load\_balancer](#input\_internal\_load\_balancer) | Whether to configure load balancer as internal | `bool` | `false` | no |
 | <a name="input_is_live_cluster"></a> [is\_live\_cluster](#input\_is\_live\_cluster) | For live clusters externalDNS annotation will have var.live\_domain (default *.cloud-platform.service.justice.gov.uk) | `bool` | `false` | no |
 | <a name="input_is_non_prod_modsec"></a> [is\_non\_prod\_modsec](#input\_is\_non\_prod\_modsec) | is non-prod modsec controller | `bool` | `false` | no |
 | <a name="input_is_production"></a> [is\_production](#input\_is\_production) | Whether this is used for production or not | `string` | `""` | no |
