@@ -92,6 +92,10 @@ resource "helm_release" "nginx_ingress" {
   }
 }
 
+##########################################################
+# Certificate resources for wildcard domain cert issuing #
+##########################################################
+
 resource "kubectl_manifest" "nginx_ingress_default_certificate" {
   count = var.controller_name == "default" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/default-certificate.yaml.tpl", {
@@ -101,6 +105,30 @@ resource "kubectl_manifest" "nginx_ingress_default_certificate" {
     alt_name          = var.is_live_cluster ? format("- '*.%s'", var.live_domain) : ""
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
+  })
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers
+  ]
+}
+
+resource "kubectl_manifest" "nginx_ingress_internal_certificate" {
+  count = var.controller_name == "internal" ? 1 : 0
+  yaml_body = templatefile("${path.module}/templates/internal-certificate.yaml.tpl", {
+    internal_hosted_zone = "*.${var.internal_hosted_zone}"
+    namespace         = "ingress-controllers"
+  })
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers
+  ]
+}
+
+resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
+  count = var.controller_name == "internal-non-prod" ? 1 : 0
+  yaml_body = templatefile("${path.module}/templates/internal-non-prod-certificate.yaml.tpl", {
+    internal_non_prod_hosted_zone = "*.${var.internal_non_prod_hosted_zone}"
+    namespace         = "ingress-controllers"
   })
 
   depends_on = [

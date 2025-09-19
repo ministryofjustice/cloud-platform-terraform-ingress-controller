@@ -200,3 +200,15 @@ variable "internal_load_balancer" {
   type        = bool
   default     = false
 }
+
+variable "internal_hosted_zone" {
+  description = "The internal hosted zone domain name"
+  type        = string
+  default     = "internal.cloud-platform.service.justice.gov.uk"
+}
+
+variable "internal_non_prod_hosted_zone" {
+  description = "The internal non-prod hosted zone domain name"
+  type        = string
+  default     = "internal-non-prod.cloud-platform.service.justice.gov.uk"
+}

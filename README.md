@@ -47,6 +47,8 @@ See [example](example/) dir
 | [aws_iam_role_policy_attachment.modsec_fluentbit_irsa_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [helm_release.nginx_ingress](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubectl_manifest.nginx_ingress_default_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
+| [kubectl_manifest.nginx_ingress_internal_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
+| [kubectl_manifest.nginx_ingress_internal_non_prod_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubectl_manifest.prometheus_rule_alert](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubernetes_config_map.fluent-bit-config](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_config_map.fluent_bit_lua_script](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
@@ -81,7 +83,9 @@ See [example](example/) dir
 | <a name="input_environment_name"></a> [environment\_name](#input\_environment\_name) | Environment name | `string` | `""` | no |
 | <a name="input_fluent_bit_version"></a> [fluent\_bit\_version](#input\_fluent\_bit\_version) | fluent bit container version used to exrtact modsec audit logs | `string` | `"3.0.2-amd64"` | no |
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>) | `string` | `""` | no |
+| <a name="input_internal_hosted_zone"></a> [internal\_hosted\_zone](#input\_internal\_hosted\_zone) | The internal hosted zone domain name | `string` | `"internal.cloud-platform.service.justice.gov.uk"` | no |
 | <a name="input_internal_load_balancer"></a> [internal\_load\_balancer](#input\_internal\_load\_balancer) | Whether to configure load balancer as internal | `bool` | `false` | no |
+| <a name="input_internal_non_prod_hosted_zone"></a> [internal\_non\_prod\_hosted\_zone](#input\_internal\_non\_prod\_hosted\_zone) | The internal non-prod hosted zone domain name | `string` | `"internal-non-prod.cloud-platform.service.justice.gov.uk"` | no |
 | <a name="input_is_live_cluster"></a> [is\_live\_cluster](#input\_is\_live\_cluster) | For live clusters externalDNS annotation will have var.live\_domain (default *.cloud-platform.service.justice.gov.uk) | `bool` | `false` | no |
 | <a name="input_is_non_prod_modsec"></a> [is\_non\_prod\_modsec](#input\_is\_non\_prod\_modsec) | is non-prod modsec controller | `bool` | `false` | no |
 | <a name="input_is_production"></a> [is\_production](#input\_is\_production) | Whether this is used for production or not | `string` | `""` | no |
