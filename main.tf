@@ -3,7 +3,7 @@
 ##########
 
 locals {
-  external_dns_annotation = "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
+  external_dns_annotation = var.controller_name == "internal" ? "ingress.internal.cloud-platform.service.justice.gov.uk" : var.controller_name == "internal-non-prod" ? "ingress.internal-non-prod.cloud-platform.service.justice.gov.uk" : "*.apps.${var.cluster_domain_name},*.${var.cluster_domain_name}${var.is_live_cluster ? format(",*.%s", var.live_domain) : ""}"
   tags                    = join(", ", [for key, value in var.default_tags : "${key}=${value}"])
 }
 
