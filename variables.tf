@@ -212,3 +212,9 @@ variable "internal_non_prod_hosted_zone" {
   type        = string
   default     = "internal-non-prod.cloud-platform.service.justice.gov.uk"
 }
+
+variable "nlb_target_group_type_ip" {
+  description = "Whether to set NLB target group type to IP"
+  type        = bool
+  default     = false
+}

@@ -80,6 +80,7 @@ resource "helm_release" "nginx_ingress" {
     fluent_bit_irsa_arn            = var.enable_modsec ? resource.aws_iam_role.modsec_fluentbit_irsa[0].arn : null
     default_tags                   = local.tags
     internal_load_balancer         = var.internal_load_balancer
+    nlb_target_group_type_ip       = var.nlb_target_group_type_ip
   })]
 
   depends_on = [

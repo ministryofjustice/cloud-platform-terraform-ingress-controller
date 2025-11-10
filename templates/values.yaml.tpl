@@ -293,6 +293,9 @@ controller:
 %{~ endif ~}
 
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+%{ if nlb_target_group_type_ip }
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+%{~ endif ~}      
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "${enable_cross_zone_lb}"
 %{ if internal_load_balancer }
       service.beta.kubernetes.io/aws-load-balancer-internal: "true"
