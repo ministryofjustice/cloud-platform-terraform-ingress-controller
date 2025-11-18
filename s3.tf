@@ -11,7 +11,7 @@
 
 module "s3_bucket_modsec_logs" {
   count  = var.enable_modsec ? 1 : 0
-  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.2.0"
+  source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.3.0"
   
   lifecycle_rule = [
     {
