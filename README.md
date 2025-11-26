@@ -81,7 +81,7 @@ See [example](example/) dir
 | <a name="input_enable_modsec"></a> [enable\_modsec](#input\_enable\_modsec) | Enable https://github.com/SpiderLabs/ModSecurity-nginx | `bool` | `false` | no |
 | <a name="input_enable_owasp"></a> [enable\_owasp](#input\_enable\_owasp) | Use default ruleset from https://github.com/SpiderLabs/owasp-modsecurity-crs/ | `bool` | `false` | no |
 | <a name="input_environment_name"></a> [environment\_name](#input\_environment\_name) | Environment name | `string` | `""` | no |
-| <a name="input_fluent_bit_version"></a> [fluent\_bit\_version](#input\_fluent\_bit\_version) | fluent bit container version used to exrtact modsec audit logs | `string` | `"3.0.2-amd64"` | no |
+| <a name="input_fluent_bit_version"></a> [fluent\_bit\_version](#input\_fluent\_bit\_version) | fluent bit container version used to exrtact modsec audit logs | `string` | `"4.2.0-amd64"` | no |
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>) | `string` | `""` | no |
 | <a name="input_internal_hosted_zone"></a> [internal\_hosted\_zone](#input\_internal\_hosted\_zone) | The internal hosted zone domain name | `string` | `"internal.cloud-platform.service.justice.gov.uk"` | no |
 | <a name="input_internal_load_balancer"></a> [internal\_load\_balancer](#input\_internal\_load\_balancer) | Whether to configure load balancer as internal | `bool` | `false` | no |
