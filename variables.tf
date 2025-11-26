@@ -125,7 +125,7 @@ variable "opensearch_app_logs_host" {
 variable "fluent_bit_version" {
   description = "fluent bit container version used to exrtact modsec audit logs"
   type        = string
-  default     = "3.0.2-amd64"
+  default     = "4.2.0-amd64"
 }
 
 variable "enable_anti_affinity" {
