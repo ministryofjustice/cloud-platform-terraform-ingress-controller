@@ -268,7 +268,9 @@ controller:
       "upstream_addr": "$upstream_addr",
       "upstream_response_length": [$upstream_response_length],
       "upstream_response_time": [$upstream_response_time],
-      "upstream_status": [$upstream_status]
+      "upstream_status": [$upstream_status],
+      "x_docrepository_remote_user": "$http_x_docrepository_remote_user",
+      "x_docrepository_real_remote_user": "$http_x_docrepository_real_remote_user"
       }
 
   publishService:
