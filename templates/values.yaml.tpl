@@ -1,10 +1,14 @@
+imagePullSecrets:
+  - name: regcred
+
 nameOverride: ${name_override}
 controller:
-## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
-  enableAnnotationValidations: false
   image:
     chroot: false
-    terminationGracePeriod: 600
+    registry: cgr.dev
+    image: justice.gov.uk/ingress-nginx-controller
+    tag: 1.14.3
+    digest: sha256:3ef4ec0f422035485176269f40c2de71eda1a6b0699e2e404f63164d2d6b3ef4
   replicaCount: ${replica_count}
   maxUnavailable: 1
   priorityClassName: system-cluster-critical
