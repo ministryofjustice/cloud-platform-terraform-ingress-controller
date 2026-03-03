@@ -306,29 +306,8 @@ controller:
 %{~ endif ~}
   
   admissionWebhooks:
-    enabled: true
-    annotations: {}
-    enabled: true
-    failurePolicy: Fail
-    # timeoutSeconds: 10
-    port: 8443
-    certificate: "/usr/local/certificates/cert"
-    key: "/usr/local/certificates/key"
-    namespaceSelector: {}
-    objectSelector: {}
-
-    service:
-      annotations: {}
-      # clusterIP: ""
-      externalIPs: []
-      # loadBalancerIP: ""
-      loadBalancerSourceRanges: []
-      servicePort: 443
-      type: ClusterIP
-
-    patch:
-      enabled: true
-
+    enabled: false
+ 
 defaultBackend:
   enabled: true
   name: default-backend
