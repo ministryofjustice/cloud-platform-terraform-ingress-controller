@@ -46,6 +46,7 @@ See [example](example/) dir
 | [aws_iam_role.modsec_fluentbit_irsa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.modsec_fluentbit_irsa_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [helm_release.nginx_ingress](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [kubectl_manifest.nginx_ingress_beta_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubectl_manifest.nginx_ingress_default_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubectl_manifest.nginx_ingress_internal_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
 | [kubectl_manifest.nginx_ingress_internal_non_prod_certificate](https://registry.terraform.io/providers/alekc/kubectl/2.1.3/docs/resources/manifest) | resource |
@@ -68,6 +69,7 @@ See [example](example/) dir
 | <a name="input_application"></a> [application](#input\_application) | Application name | `string` | `""` | no |
 | <a name="input_backend_repo"></a> [backend\_repo](#input\_backend\_repo) | repository for the default backend app | `string` | `"ministryofjustice/cloud-platform-custom-error-pages"` | no |
 | <a name="input_backend_tag"></a> [backend\_tag](#input\_backend\_tag) | tag of the default backend app | `string` | `"1.1.5"` | no |
+| <a name="input_beta_hosted_zone"></a> [beta\_hosted\_zone](#input\_beta\_hosted\_zone) | The beta hosted zone domain name | `string` | `"beta.cloud-platform.service.justice.gov.uk"` | no |
 | <a name="input_business_unit"></a> [business\_unit](#input\_business\_unit) | Area of the MOJ responsible for the service | `string` | `""` | no |
 | <a name="input_cluster"></a> [cluster](#input\_cluster) | cluster name used for opensearch indices | `string` | `""` | no |
 | <a name="input_cluster_domain_name"></a> [cluster\_domain\_name](#input\_cluster\_domain\_name) | The cluster domain used for externalDNS annotations and certmanager | `any` | n/a | yes |
