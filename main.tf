@@ -48,7 +48,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.12.0"
+  version    = "4.14.3"
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
@@ -128,6 +128,18 @@ resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
   count = var.controller_name == "internal-non-prod" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/internal-non-prod-certificate.yaml.tpl", {
     internal_non_prod_hosted_zone = "*.${var.internal_non_prod_hosted_zone}"
+    namespace         = "ingress-controllers"
+  })
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers
+  ]
+}
+
+resource "kubectl_manifest" "nginx_ingress_beta_certificate" {
+  count = var.controller_name == "beta" ? 1 : 0
+  yaml_body = templatefile("${path.module}/templates/beta-certificate.yaml.tpl", {
+    beta_hosted_zone = "*.${var.beta_hosted_zone}"
     namespace         = "ingress-controllers"
   })
 
