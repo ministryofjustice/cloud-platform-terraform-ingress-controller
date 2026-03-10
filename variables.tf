@@ -212,3 +212,9 @@ variable "internal_non_prod_hosted_zone" {
   type        = string
   default     = "internal-non-prod.cloud-platform.service.justice.gov.uk"
 }
+
+variable "beta_hosted_zone" {
+  description = "The beta hosted zone domain name"
+  type        = string
+  default     = "beta.cloud-platform.service.justice.gov.uk"
+}

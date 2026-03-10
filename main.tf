@@ -136,6 +136,18 @@ resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
   ]
 }
 
+resource "kubectl_manifest" "nginx_ingress_beta_certificate" {
+  count = var.controller_name == "beta" ? 1 : 0
+  yaml_body = templatefile("${path.module}/templates/beta-certificate.yaml.tpl", {
+    beta_hosted_zone = "*.${var.beta_hosted_zone}"
+    namespace         = "ingress-controllers"
+  })
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers
+  ]
+}
+
 #########################
 # prometheus rule alert #
 #########################
