@@ -80,6 +80,10 @@ resource "helm_release" "nginx_ingress" {
     fluent_bit_irsa_arn            = var.enable_modsec ? resource.aws_iam_role.modsec_fluentbit_irsa[0].arn : null
     default_tags                   = local.tags
     internal_load_balancer         = var.internal_load_balancer
+    # Chainguard deployment specific parameters
+    enable_chainguard = var.enable_chainguard
+    chainguard_tag    = var.chainguard_tag
+    chainguard_digest = var.chainguard_digest
   })]
 
   depends_on = [
@@ -116,7 +120,7 @@ resource "kubectl_manifest" "nginx_ingress_internal_certificate" {
   count = var.controller_name == "internal" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/internal-certificate.yaml.tpl", {
     internal_hosted_zone = "*.${var.internal_hosted_zone}"
-    namespace         = "ingress-controllers"
+    namespace            = "ingress-controllers"
   })
 
   depends_on = [
@@ -128,7 +132,7 @@ resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
   count = var.controller_name == "internal-non-prod" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/internal-non-prod-certificate.yaml.tpl", {
     internal_non_prod_hosted_zone = "*.${var.internal_non_prod_hosted_zone}"
-    namespace         = "ingress-controllers"
+    namespace                     = "ingress-controllers"
   })
 
   depends_on = [
@@ -140,7 +144,7 @@ resource "kubectl_manifest" "nginx_ingress_beta_certificate" {
   count = var.controller_name == "beta" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/beta-certificate.yaml.tpl", {
     beta_hosted_zone = "*.${var.beta_hosted_zone}"
-    namespace         = "ingress-controllers"
+    namespace        = "ingress-controllers"
   })
 
   depends_on = [

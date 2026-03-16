@@ -218,3 +218,21 @@ variable "beta_hosted_zone" {
   type        = string
   default     = "beta.cloud-platform.service.justice.gov.uk"
 }
+
+variable "enable_chainguard" {
+  description = "Whether to use chainguard image & associated registry pull secret in helm values"
+  type        = bool
+  default     = false
+}
+
+variable "chainguard_tag" {
+  description = "chainguard ingress-nginx image tag"
+  type        = string
+  default     = ""
+}
+
+variable "chainguard_digest" {
+  description = "chainguard ingress-nginx image digest"
+  type        = string
+  default     = ""
+}
