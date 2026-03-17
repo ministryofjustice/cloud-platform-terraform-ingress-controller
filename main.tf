@@ -161,18 +161,3 @@ resource "kubectl_manifest" "prometheus_rule_alert" {
   depends_on = [helm_release.nginx_ingress]
   yaml_body  = file("${path.module}/resources/alerts.yaml")
 }
-
-resource "kubernetes_secret" "chainguard_creds" {
-
-  count = var.chainguard_registry_credentials != "" ? 1 : 0
-  metadata {
-    name      = "chainguard-creds"
-    namespace = "ingress-controllers"
-  }
-
-  data = {
-    ".dockerconfigjson" = var.chainguard_registry_credentials
-  }
-
-  type = "kubernetes.io/dockerconfigjson"
-}
