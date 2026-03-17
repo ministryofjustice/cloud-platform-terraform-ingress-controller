@@ -219,13 +219,6 @@ variable "beta_hosted_zone" {
   default     = "beta.cloud-platform.service.justice.gov.uk"
 }
 
-variable "chainguard_registry_credentials" {
-  description = "docker registry credientials for chainguard image, sourced from account level ssm param"
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-
 variable "enable_chainguard" {
   description = "Enable chainguard"
   type = bool
