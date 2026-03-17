@@ -219,20 +219,9 @@ variable "beta_hosted_zone" {
   default     = "beta.cloud-platform.service.justice.gov.uk"
 }
 
-variable "enable_chainguard" {
-  description = "Whether to use chainguard image & associated registry pull secret in helm values"
-  type        = bool
-  default     = false
-}
-
-variable "chainguard_tag" {
-  description = "chainguard ingress-nginx image tag"
+variable "chainguard_registry_credentials" {
+  description = "docker registry credientials for chainguard image, sourced from account level ssm param"
   type        = string
-  default     = ""
-}
-
-variable "chainguard_digest" {
-  description = "chainguard ingress-nginx image digest"
-  type        = string
+  sensitive   = true
   default     = ""
 }

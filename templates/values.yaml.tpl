@@ -1,4 +1,4 @@
-%{ if enable_chainguard ~}
+%{ if chainguard_registry_credentials != "" ~}
 imagePullSecrets:
   - name: chainguard-creds
 %{ endif ~}
@@ -8,7 +8,7 @@ controller:
 ## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
   enableAnnotationValidations: false
   image:
-  %{ if enable_chainguard ~}
+  %{ if chainguard_registry_credentials != "" ~}
     registry: cgr.dev
     image: justice.gov.uk/ingress-nginx-controller
     tag: ${chainguard_tag}

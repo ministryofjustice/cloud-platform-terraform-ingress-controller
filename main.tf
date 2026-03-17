@@ -48,7 +48,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.14.3"
+  version    = "4.14.3" # When we upgrade this, we must also update the chainguard_tag and chainguard_digest below to match upstream k8s image version
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
@@ -81,9 +81,9 @@ resource "helm_release" "nginx_ingress" {
     default_tags                   = local.tags
     internal_load_balancer         = var.internal_load_balancer
     # Chainguard deployment specific parameters
-    enable_chainguard = var.enable_chainguard
-    chainguard_tag    = var.chainguard_tag
-    chainguard_digest = var.chainguard_digest
+    chainguard_registry_credentials = var.chainguard_registry_credentials
+    chainguard_tag                  = "1.14.3"
+    chainguard_digest               = "sha256:3ef4ec0f422035485176269f40c2de71eda1a6b0699e2e404f63164d2d6b3ef4"
   })]
 
   depends_on = [
@@ -159,4 +159,19 @@ resource "kubectl_manifest" "prometheus_rule_alert" {
   count      = var.controller_name == "default" ? 1 : 0
   depends_on = [helm_release.nginx_ingress]
   yaml_body  = file("${path.module}/resources/alerts.yaml")
+}
+
+resource "kubernetes_secret" "chainguard_creds" {
+
+  count = var.chainguard_registry_credentials != "" ? 1 : 0
+  metadata {
+    name      = "chainguard-creds"
+    namespace = "ingress-controllers"
+  }
+
+  data = {
+    ".dockerconfigjson" = var.chainguard_registry_credentials
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
 }
