@@ -225,3 +225,9 @@ variable "chainguard_registry_credentials" {
   sensitive   = true
   default     = ""
 }
+
+variable "enable_chainguard" {
+  description = "Enable chainguard"
+  type = bool
+  default = false
+}

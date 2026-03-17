@@ -81,6 +81,7 @@ resource "helm_release" "nginx_ingress" {
     default_tags                   = local.tags
     internal_load_balancer         = var.internal_load_balancer
     # Chainguard deployment specific parameters
+    enable_chainguard               = var.enable_chainguard
     chainguard_registry_credentials = var.chainguard_registry_credentials
     chainguard_tag                  = "1.14.3"
     chainguard_digest               = "sha256:3ef4ec0f422035485176269f40c2de71eda1a6b0699e2e404f63164d2d6b3ef4"
