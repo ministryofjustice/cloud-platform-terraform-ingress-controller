@@ -317,7 +317,7 @@ controller:
 %{~ endif ~}
 
   admissionWebhooks:
-    enabled: false
+    enabled: true
 
 defaultBackend:
   enabled: true
