@@ -48,7 +48,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.14.3"
+  version    = "4.12.0" # When we upgrade this, we must also update the chainguard_tag and chainguard_digest below to match upstream k8s image version
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
@@ -80,6 +80,10 @@ resource "helm_release" "nginx_ingress" {
     fluent_bit_irsa_arn            = var.enable_modsec ? resource.aws_iam_role.modsec_fluentbit_irsa[0].arn : null
     default_tags                   = local.tags
     internal_load_balancer         = var.internal_load_balancer
+    # Chainguard deployment specific parameters
+    enable_chainguard               = var.enable_chainguard
+    chainguard_tag                  = "1.14.3"
+    chainguard_digest               = "sha256:3ef4ec0f422035485176269f40c2de71eda1a6b0699e2e404f63164d2d6b3ef4"
   })]
 
   depends_on = [
@@ -116,7 +120,7 @@ resource "kubectl_manifest" "nginx_ingress_internal_certificate" {
   count = var.controller_name == "internal" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/internal-certificate.yaml.tpl", {
     internal_hosted_zone = "*.${var.internal_hosted_zone}"
-    namespace         = "ingress-controllers"
+    namespace            = "ingress-controllers"
   })
 
   depends_on = [
@@ -128,7 +132,7 @@ resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
   count = var.controller_name == "internal-non-prod" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/internal-non-prod-certificate.yaml.tpl", {
     internal_non_prod_hosted_zone = "*.${var.internal_non_prod_hosted_zone}"
-    namespace         = "ingress-controllers"
+    namespace                     = "ingress-controllers"
   })
 
   depends_on = [
@@ -140,7 +144,7 @@ resource "kubectl_manifest" "nginx_ingress_beta_certificate" {
   count = var.controller_name == "beta" ? 1 : 0
   yaml_body = templatefile("${path.module}/templates/beta-certificate.yaml.tpl", {
     beta_hosted_zone = "*.${var.beta_hosted_zone}"
-    namespace         = "ingress-controllers"
+    namespace        = "ingress-controllers"
   })
 
   depends_on = [

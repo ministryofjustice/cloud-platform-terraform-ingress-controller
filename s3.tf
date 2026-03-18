@@ -12,7 +12,7 @@
 module "s3_bucket_modsec_logs" {
   count  = var.enable_modsec ? 1 : 0
   source = "github.com/ministryofjustice/cloud-platform-terraform-s3-bucket?ref=5.2.0"
-  
+
   lifecycle_rule = [
     {
       enabled = true
@@ -64,32 +64,32 @@ data "aws_eks_cluster" "eks_cluster" {
 # Create assumable role #
 data "aws_iam_policy_document" "modsec_fluentbit_irsa_trust_policy" {
   statement {
-      effect  = "Allow"
-      actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
 
-      condition {
-        test     = "StringEquals"
-        variable = "${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub"
-        values   = ["system:serviceaccount:ingress-controllers:nginx-ingress-${var.controller_name}"]
-      }
-
-      condition {
-        test     = "StringEquals"
-        variable = "${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:aud"
-        values   = ["sts.amazonaws.com"]
-      }
-
-      principals {
-        type        = "Federated"
-        identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"]
-      }
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub"
+      values   = ["system:serviceaccount:ingress-controllers:nginx-ingress-${var.controller_name}"]
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    principals {
+      type        = "Federated"
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"]
+    }
+  }
 }
 
 resource "aws_iam_role" "modsec_fluentbit_irsa" {
-  count               = var.enable_modsec ? 1 : 0
-  name                = "cloud-platform-${var.controller_name}-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
-  assume_role_policy  = data.aws_iam_policy_document.modsec_fluentbit_irsa_trust_policy.json
+  count              = var.enable_modsec ? 1 : 0
+  name               = "cloud-platform-${var.controller_name}-fluentbit-irsa-${data.aws_eks_cluster.eks_cluster.name}"
+  assume_role_policy = data.aws_iam_policy_document.modsec_fluentbit_irsa_trust_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "modsec_fluentbit_irsa_s3" {

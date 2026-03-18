@@ -218,3 +218,9 @@ variable "beta_hosted_zone" {
   type        = string
   default     = "beta.cloud-platform.service.justice.gov.uk"
 }
+
+variable "enable_chainguard" {
+  description = "Enable chainguard"
+  type = bool
+  default = false
+}

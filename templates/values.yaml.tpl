@@ -1,8 +1,19 @@
+%{ if enable_chainguard ~}
+imagePullSecrets:
+  - name: chainguard-creds
+%{ endif ~}
+
 nameOverride: ${name_override}
 controller:
 ## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
   enableAnnotationValidations: false
   image:
+%{ if enable_chainguard ~}
+    registry: cgr.dev
+    image: justice.gov.uk/ingress-nginx-controller
+    tag: ${chainguard_tag}
+    digest: ${chainguard_digest}
+%{ endif ~}
     chroot: false
     terminationGracePeriod: 600
   replicaCount: ${replica_count}
@@ -19,7 +30,7 @@ controller:
   # when users add those annotations.
   # Global snippets in ConfigMap are still respected
   allowSnippetAnnotations: true
-  
+
 %{ if enable_modsec ~}
   extraVolumes:
   ## Additional volumes to the controller pod.
@@ -125,7 +136,7 @@ controller:
           cp /home/logrotate.conf /etc/logrotate.conf
           ln -s /etc/cron.daily/logrotate /etc/cron.hourly/logrotate
           service cron start
-          sleep infinity 
+          sleep infinity
       volumeMounts:
       - name: logrotate-config
         mountPath: /home
@@ -212,7 +223,7 @@ controller:
 %{ if enable_latest_tls }
     ssl-protocols: "TLSv1.2 TLSv1.3"
     ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA"
-%{ else ~}  
+%{ else ~}
     # Config below is for old TLS versions. Specifically an incident with IE11 on
     # bank-admin.prisoner-money.service.justice.gov.uk. More info CP Incidents page.
     ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA"
@@ -304,10 +315,10 @@ controller:
   extraArgs:
     default-ssl-certificate: ${default_cert}
 %{~ endif ~}
-  
+
   admissionWebhooks:
-    enabled: false
- 
+    enabled: true
+
 defaultBackend:
   enabled: true
   name: default-backend
@@ -318,11 +329,11 @@ defaultBackend:
 
 rbac:
   create: true
-%{ if enable_modsec }   
+%{ if enable_modsec }
 serviceAccount:
   create: true
   name: ""
-  automountServiceAccountToken: true  
-  annotations: 
+  automountServiceAccountToken: true
+  annotations:
     eks.amazonaws.com/role-arn: ${fluent_bit_irsa_arn}
 %{~ endif ~}
