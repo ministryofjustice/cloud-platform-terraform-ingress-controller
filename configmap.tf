@@ -221,7 +221,7 @@ resource "kubernetes_config_map" "fluent-bit-config" {
         AWS_AUTH                          On
         AWS_REGION                        eu-west-2
         Suppress_Type_Name                On
-        Buffer_Size                       False  
+        Buffer_Size                       False
 
     [OUTPUT]
         Name                              opensearch
@@ -278,7 +278,6 @@ resource "kubernetes_config_map" "fluent-bit-config" {
   }
 
   depends_on = [
-    kubernetes_namespace.ingress_controllers,
     module.s3_bucket_modsec_logs
   ]
 
@@ -331,10 +330,6 @@ resource "kubernetes_config_map" "fluent_bit_lua_script" {
     EOT
   }
 
-  depends_on = [
-    kubernetes_namespace.ingress_controllers,
-  ]
-
   lifecycle {
     ignore_changes = [metadata[0].annotations]
   }
@@ -354,10 +349,6 @@ resource "kubernetes_config_map" "modsecurity_nginx_config" {
   data = {
     "modsecurity.conf" = file("${path.module}/templates/modsecurity.conf"),
   }
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers,
-  ]
 
   lifecycle {
     ignore_changes = [metadata[0].annotations]
@@ -415,10 +406,6 @@ resource "kubernetes_config_map" "logrotate_config" {
       }
     EOT
   }
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers,
-  ]
 
   lifecycle {
     ignore_changes = [metadata[0].annotations]

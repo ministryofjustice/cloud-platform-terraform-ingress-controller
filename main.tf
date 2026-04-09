@@ -56,8 +56,7 @@ resource "helm_release" "nginx_ingress" {
   })]
 
   depends_on = [
-    kubernetes_namespace.ingress_controllers,
-    kubernetes_config_map.modsecurity_nginx_config,
+    kubernetes_config_map.modsecurity_nginx_config
   ]
 
   lifecycle {
@@ -79,10 +78,6 @@ resource "kubectl_manifest" "nginx_ingress_default_certificate" {
     apps_alt_name     = var.is_live_cluster ? format("- '*.apps.%s'", var.live_domain) : ""
     live1_dns         = var.live1_cert_dns_name
   })
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers
-  ]
 }
 
 resource "kubectl_manifest" "nginx_ingress_internal_certificate" {
@@ -91,10 +86,6 @@ resource "kubectl_manifest" "nginx_ingress_internal_certificate" {
     internal_hosted_zone = "*.${var.internal_hosted_zone}"
     namespace            = "ingress-controllers"
   })
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers
-  ]
 }
 
 resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
@@ -103,10 +94,6 @@ resource "kubectl_manifest" "nginx_ingress_internal_non_prod_certificate" {
     internal_non_prod_hosted_zone = "*.${var.internal_non_prod_hosted_zone}"
     namespace                     = "ingress-controllers"
   })
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers
-  ]
 }
 
 resource "kubectl_manifest" "nginx_ingress_beta_certificate" {
@@ -115,10 +102,6 @@ resource "kubectl_manifest" "nginx_ingress_beta_certificate" {
     beta_hosted_zone = "*.${var.beta_hosted_zone}"
     namespace        = "ingress-controllers"
   })
-
-  depends_on = [
-    kubernetes_namespace.ingress_controllers
-  ]
 }
 
 #########################
