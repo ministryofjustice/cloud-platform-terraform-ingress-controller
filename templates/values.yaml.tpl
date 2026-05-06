@@ -1,6 +1,5 @@
 %{ if enable_chainguard ~}
 imagePullSecrets:
-  ## Update this to chainguard-credentials once tested
   - name: chainguard-creds
 %{ endif ~}
 
