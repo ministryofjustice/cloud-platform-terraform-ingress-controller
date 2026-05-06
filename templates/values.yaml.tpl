@@ -1,6 +1,6 @@
 %{ if enable_chainguard ~}
 imagePullSecrets:
-  - name: chainguard-creds
+  - name: chainguard-credentials
 %{ endif ~}
 
 nameOverride: ${name_override}
