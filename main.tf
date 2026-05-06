@@ -38,6 +38,24 @@ resource "kubernetes_namespace" "ingress_controllers" {
   }
 }
 
+resource "kubernetes_secret" "chainguard_credentials" {
+  count = var.controller_name == "default" ? 1 : 0
+  metadata {
+    name      = "chainguard-credentials"
+    namespace = "ingress-controllers"
+  }
+
+  data = {
+    ".dockerconfigjson" = data.aws_ssm_parameter.chainguard_registry_credentials.value
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  depends_on = [
+    kubernetes_namespace.ingress_controllers
+  ]
+}
+
 ########
 # Helm #
 ########
@@ -87,7 +105,7 @@ resource "helm_release" "nginx_ingress" {
   })]
 
   depends_on = [
-    kubernetes_namespace.ingress_controllers,
+    kubernetes_secret.chainguard_credentials,
     kubernetes_config_map.modsecurity_nginx_config,
   ]
 
