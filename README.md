@@ -37,7 +37,7 @@ See [example](example/) dir
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_s3_bucket_modsec_logs"></a> [s3\_bucket\_modsec\_logs](#module\_s3\_bucket\_modsec\_logs) | github.com/ministryofjustice/cloud-platform-terraform-s3-bucket | 5.2.0 |
+| <a name="module_s3_bucket_modsec_logs"></a> [s3\_bucket\_modsec\_logs](#module\_s3\_bucket\_modsec\_logs) | github.com/ministryofjustice/cloud-platform-terraform-s3-bucket | 5.3.1 |
 
 ## Resources
 
