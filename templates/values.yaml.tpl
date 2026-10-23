@@ -233,9 +233,9 @@ controller:
       if ($scheme != 'https') {
         return 308 https://$server_name$request_uri;
       }
-      if ($uri ~* \.php(/|$)) {
-        return 403;
-      }
+      # if ($uri ~* \.php(/|$)) {
+      #   return 403;
+      # }
 
     #
     # For a list of available variables please check the documentation on
