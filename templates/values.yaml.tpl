@@ -236,6 +236,14 @@ controller:
       # if ($uri ~* \.php(/|$)) {
       #   return 403;
       # }
+      # HTTP2Shell / Node2Shell (CVE-2026-111497): reject Brotli-compressed
+      # request bodies with 415. Browsers do not send these, so impact should be
+      # near zero. Matches "br" as a whole token in Content-Encoding (e.g. "br",
+      # "BR", "gzip, br") but not other codings. Separate from the PHP rule above
+      # so it can be rolled back on its own: comment out these three lines.
+      if ($http_content_encoding ~* "(^|,|\s)br(\s|,|;|$)") {
+        return 415;
+      }
 
     #
     # For a list of available variables please check the documentation on
