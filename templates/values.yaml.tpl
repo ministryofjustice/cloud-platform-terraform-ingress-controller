@@ -233,9 +233,7 @@ controller:
       if ($scheme != 'https') {
         return 308 https://$server_name$request_uri;
       }
-      # if ($uri ~* \.php(/|$)) {
-      #   return 403;
-      # }
+      
       # HTTP2Shell / Node2Shell (CVE-2026-111497): reject Brotli-compressed
       # request bodies with 415. Browsers do not send these, so impact should be
       # near zero. Matches "br" as a whole token in Content-Encoding (e.g. "br",
