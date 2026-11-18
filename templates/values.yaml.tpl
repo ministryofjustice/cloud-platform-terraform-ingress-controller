@@ -5,6 +5,8 @@ imagePullSecrets:
 
 nameOverride: ${name_override}
 controller:
+  config:
+    use-http2: false
 ## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
   enableAnnotationValidations: false
   image:
