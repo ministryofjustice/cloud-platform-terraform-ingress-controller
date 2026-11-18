@@ -5,8 +5,6 @@ imagePullSecrets:
 
 nameOverride: ${name_override}
 controller:
-  config:
-    use-http2: false
 ## enableAnnotationValidations defaults to false in 4.10.4, however bringing into template for future ref
   enableAnnotationValidations: false
   image:
@@ -221,6 +219,7 @@ controller:
     proxy-buffering: "${proxy_response_buffering}"
     upstream-keepalive-time: "${upstream_keepalive_time}"
     annotations-risk-level: "Critical"
+    use-http2: "false"
 
 %{ if enable_latest_tls }
     ssl-protocols: "TLSv1.2 TLSv1.3"
