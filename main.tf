@@ -66,7 +66,7 @@ resource "helm_release" "nginx_ingress" {
   namespace  = "ingress-controllers"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 600
-  version    = "4.15.16" # When we upgrade this, we must also update the chainguard_tag and chainguard_digest below to match upstream k8s image version
+  version    = "4.15.1" # When we upgrade this, we must also update the chainguard_tag and chainguard_digest below to match upstream k8s image version
 
   values = [templatefile("${path.module}/templates/values.yaml.tpl", {
     metrics_namespace       = "ingress-controllers"
