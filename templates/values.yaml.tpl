@@ -243,7 +243,7 @@ controller:
         return 415;
       }
 
-      # Block govuk-prototype-kit
+      # Block govuk-prototype-kit - see ministryofjustice/cloud-platform-security-issues/issues/187
       if ($uri ~* /plugin-assets/govuk-prototype-kit(/|$)) {
         return 403;
       }
