@@ -243,6 +243,11 @@ controller:
         return 415;
       }
 
+      # Block govuk-prototype-kit
+      if ($uri ~* /plugin-assets/govuk-prototype-kit(/|$)) {
+        return 403;
+      }
+
     #
     # For a list of available variables please check the documentation on
     # `log-format-upstream` and also the relevant nginx document:
